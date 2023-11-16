@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\hp\\Desktop\\FrontToBack_Pronia\\FrontToBack_Pronia\\FrontToBack_Pronia.csproj": {}
+    "C:\\Users\\hp\\Desktop\\FTB_13.11\\FrontToBack_Pronia\\FrontToBack_Pronia\\FrontToBack_Pronia.csproj": {}
   },
   "projects": {
-    "C:\\Users\\hp\\Desktop\\FrontToBack_Pronia\\FrontToBack_Pronia\\FrontToBack_Pronia.csproj": {
+    "C:\\Users\\hp\\Desktop\\FTB_13.11\\FrontToBack_Pronia\\FrontToBack_Pronia\\FrontToBack_Pronia.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\hp\\Desktop\\FrontToBack_Pronia\\FrontToBack_Pronia\\FrontToBack_Pronia.csproj",
+        "projectUniqueName": "C:\\Users\\hp\\Desktop\\FTB_13.11\\FrontToBack_Pronia\\FrontToBack_Pronia\\FrontToBack_Pronia.csproj",
         "projectName": "FrontToBack_Pronia",
-        "projectPath": "C:\\Users\\hp\\Desktop\\FrontToBack_Pronia\\FrontToBack_Pronia\\FrontToBack_Pronia.csproj",
+        "projectPath": "C:\\Users\\hp\\Desktop\\FTB_13.11\\FrontToBack_Pronia\\FrontToBack_Pronia\\FrontToBack_Pronia.csproj",
         "packagesPath": "C:\\Users\\hp\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\hp\\Desktop\\FrontToBack_Pronia\\FrontToBack_Pronia\\obj\\",
+        "outputPath": "C:\\Users\\hp\\Desktop\\FTB_13.11\\FrontToBack_Pronia\\FrontToBack_Pronia\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -43,6 +43,22 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[7.0.14, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[7.0.14, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[7.0.14, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
