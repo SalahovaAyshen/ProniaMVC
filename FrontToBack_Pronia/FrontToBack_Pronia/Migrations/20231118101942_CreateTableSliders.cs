@@ -5,7 +5,7 @@
 namespace FrontToBack_Pronia.Migrations
 {
     /// <inheritdoc />
-    public partial class createTableSlider : Migration
+    public partial class CreateTableSliders : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

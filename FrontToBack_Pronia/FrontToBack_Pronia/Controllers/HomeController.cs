@@ -2,6 +2,7 @@
 using FrontToBack_Pronia.Models;
 using FrontToBack_Pronia.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace FrontToBack_Pronia.Controllers
 {
@@ -18,17 +19,18 @@ namespace FrontToBack_Pronia.Controllers
         public IActionResult Index()
         {
             List<Shipping> shippings = _context.Shippings.ToList();
-            List<Featured> featureds = _context.Featureds.ToList();
-            List<LatestProducts> latests = _context.Latests.OrderByDescending(l=>l.Id).Take(8).ToList();
-            List<Slider>sliders = _context.Sliders.ToList();
-            List<LatestProducts> newproducts = _context.Latests.Take(4).ToList();
+            List<Slider> sliders = _context.Sliders.ToList();
+            List<Product> featureds = _context.Products.OrderBy(f=>f.Order%2==1).Take(8).Include(f => f.ProductImages).ToList();
+            List<Product> latests = _context.Products.OrderByDescending(l => l.Order).Take(8).Include(f => f.ProductImages).ToList();
+            List<Product> newproducts = _context.Products.OrderByDescending(l => l.Order).Take(4).Include(f => f.ProductImages).ToList();
+
             HomeVM homeVM = new HomeVM 
             {
                 Shipping = shippings,
+                Slider = sliders,
                 Featured = featureds,
-                Latest= latests,
-                Slider= sliders,
-                NewProduct= newproducts
+                Latest = latests,
+                NewProduct = newproducts
             };
             return View(homeVM);
         }
