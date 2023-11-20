@@ -1,6 +1,9 @@
 ﻿
 @model ProductVM
 
+@{
+    int count = 0;
+}
 <!-- Begin Main Content Area  -->
 <main class="main-content">
     <div class="breadcrumb-area breadcrumb-height"
@@ -52,14 +55,7 @@
                                              alt="Product Image" />
                                     </a>
                                 </div>
-                               @*  <div class="swiper-slide">
-                                    <a href="~/assets/images/website-images/1-4-570x633.jpg"
-                                       class="single-img gallery-popup">
-                                        <img class="img-full"
-                                            src="~/assets/images/website-images/1-4-570x633.jpg"
-                                             alt="Product Image" />
-                                    </a>
-                                </div> *@
+                             
                             </div>
                         </div>
                         <div class="thumbs-arrow-holder">
@@ -80,11 +76,7 @@
                                              src="~/assets/images/website-images/@Model.Products.ProductImages.FirstOrDefault(p=>p.IsPrimary==null)?.ImageUrl"
                                              alt="Product Thumnail" />
                                     </a>
-                                  @*   <a href="#" class="swiper-slide">
-                                        <img class="img-full"
-                                            src="~/assets/images/website-images/1-4-570x633.jpg"
-                                             alt="Product Thumnail" />
-                                    </a> *@
+                                
                                 </div>
                                 <!-- Add Arrows -->
                                 <div class="thumbs-button-wrap d-none d-md-block">
@@ -121,19 +113,34 @@
                         </div>
                         <div class="selector-wrap color-option">
                             <span class="selector-title border-bottom-0">Color</span>
-                            <select class="nice-select wide border-bottom-0 rounded-0">
-                                <option value="default">Black & White</option>
-                                <option value="blue">Blue</option>
-                                <option value="green">Green</option>
-                                <option value="red">Red</option>
-                            </select>
+                           
+                              
+                                <select class="nice-select wide border-bottom-0 rounded-0">
+                                <option>
+                                    @foreach (var item in Model.Products.ProductColors)
+                                    {
+                                        @item.Color.Name 
+                                        <option>
+                                            @item.Color.Name
+                                    </option>
+                                    }
+                                </option>
+
+                                </select>
+                            
                         </div>
                         <div class="selector-wrap size-option">
                             <span class="selector-title">Size</span>
                             <select class="nice-select wide rounded-0">
-                                <option value="medium">Medium Size & Poot</option>
-                                <option value="large">Large Size With Poot</option>
-                                <option value="small">Small Size With Poot</option>
+                               <option>
+
+                                   @foreach (var item in Model.Products.ProductSizes)
+                                    {
+                                        @item.Size.Name
+                                    <option >@item.Size.Name</option>
+                                    
+                                    }
+                               </option>
                             </select>
                         </div>
                         <p class="short-desc">
@@ -219,11 +226,15 @@
                         </div>
                         <div class="product-category product-tags">
                             <span class="title">Tags :</span>
-                            <ul>
-                                <li>
-                                    <a href="#">Furniture</a>
-                                </li>
-                            </ul>
+                          @foreach (var item in Model.Products.ProductTags)
+                            {
+                                count++;
+                                <ul>
+                                   
+                                        <a href="#">@item.Tag.Name @(item.Product.ProductTags.Count!=count ? "," : "" )</a>
+                                   
+                                </ul>
+                            }
                         </div>
                         <div class="product-category social-link align-items-center pb-0">
                             <span class="title pe-3">Share:</span>
@@ -487,16 +498,16 @@
                         text. It has roots in a piece of classical Latin literature
                     </p>
                 </div>
+           
                 <div class="col-lg-12">
                     <div class="swiper-container product-slider">
                         <div class="swiper-wrapper">
 
                             @foreach (Product item in Model.ProductList)
                             {
-                                
                                     <div class="swiper-slide product-item">
                                         <div class="product-img">
-                                            <a href="single-product-variable.html">
+                                            <a asp-controller="product" asp-action="detail" asp-route-id="@item.Id">
                                                 <img class="primary-img"
                                                      src="~/assets/images/website-images/@item.ProductImages.Find(p=>p.IsPrimary==true)?.ImageUrl"
                                                      alt="Product Images" />
@@ -546,7 +557,7 @@
                                         </div>
                                         <div class="product-content">
                                             <a class="product-name"
-                                               href="single-product-variable.html">@item.Name</a>
+                                               asp-controller="product" asp-action="detail" asp-route-id="@item.Id">@item.Name</a>
                                             <div class="price-box pb-1">
                                                 <span class="new-price">$@item.Price</span>
                                             </div>
@@ -561,12 +572,15 @@
                                             </div>
                                         </div>
                                     </div>
+                        
+                       
+                   
                                 
                             }
-
                         </div>
                     </div>
                 </div>
+                  
             </div>
         </div>
     </div>

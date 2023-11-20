@@ -4,6 +4,7 @@ using FrontToBack_Pronia.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FrontToBack_Pronia.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231120204935_CreateTableSizes")]
+    partial class CreateTableSizes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -146,25 +149,6 @@ namespace FrontToBack_Pronia.Migrations
                     b.ToTable("ProductImages");
                 });
 
-            modelBuilder.Entity("FrontToBack_Pronia.Models.ProductSize", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SizeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ProductSizes");
-                });
-
             modelBuilder.Entity("FrontToBack_Pronia.Models.ProductTag", b =>
                 {
                     b.Property<int>("Id")
@@ -225,12 +209,7 @@ namespace FrontToBack_Pronia.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ProductSizeId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductSizeId");
 
                     b.ToTable("Sizes");
                 });
@@ -286,21 +265,6 @@ namespace FrontToBack_Pronia.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Tags");
-                });
-
-            modelBuilder.Entity("ProductProductSize", b =>
-                {
-                    b.Property<int>("ProductSizesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProductSizesId", "ProductsId");
-
-                    b.HasIndex("ProductsId");
-
-                    b.ToTable("ProductProductSize");
                 });
 
             modelBuilder.Entity("FrontToBack_Pronia.Models.Product", b =>
@@ -361,28 +325,6 @@ namespace FrontToBack_Pronia.Migrations
                     b.Navigation("Tag");
                 });
 
-            modelBuilder.Entity("FrontToBack_Pronia.Models.Size", b =>
-                {
-                    b.HasOne("FrontToBack_Pronia.Models.ProductSize", null)
-                        .WithMany("Sizes")
-                        .HasForeignKey("ProductSizeId");
-                });
-
-            modelBuilder.Entity("ProductProductSize", b =>
-                {
-                    b.HasOne("FrontToBack_Pronia.Models.ProductSize", null)
-                        .WithMany()
-                        .HasForeignKey("ProductSizesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FrontToBack_Pronia.Models.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("FrontToBack_Pronia.Models.Category", b =>
                 {
                     b.Navigation("Products");
@@ -400,11 +342,6 @@ namespace FrontToBack_Pronia.Migrations
                     b.Navigation("ProductImages");
 
                     b.Navigation("ProductTags");
-                });
-
-            modelBuilder.Entity("FrontToBack_Pronia.Models.ProductSize", b =>
-                {
-                    b.Navigation("Sizes");
                 });
 
             modelBuilder.Entity("FrontToBack_Pronia.Models.Tag", b =>

@@ -21,7 +21,16 @@ namespace FrontToBack_Pronia.Controllers
         public IActionResult Detail(int id)
         {
             if (id <= 0) return BadRequest();
-            Product product = _context.Products.Include(p => p.ProductImages).Include(p=>p.Category).FirstOrDefault(x => x.Id == id);
+            Product product = _context.Products
+                .Include(p => p.ProductImages)
+                .Include(p=>p.Category)
+                .Include(p => p.ProductTags)
+                .ThenInclude(p => p.Tag)
+                .Include(p=>p.ProductColors)
+                .ThenInclude(p=>p.Color)
+                .Include(p=>p.ProductSizes)
+                .ThenInclude(p=>p.Size)
+                .FirstOrDefault(x => x.Id == id);
             if(product is null) return NotFound();
 
             
@@ -31,7 +40,7 @@ namespace FrontToBack_Pronia.Controllers
             ProductVM productVM = new ProductVM
             {
                 Products = product,
-                ProductList = products,
+                ProductList = products
                
 
             };
