@@ -13,15 +13,12 @@ namespace FrontToBack_Pronia.Controllers
         {
             _context = context;
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
+     
 
-        public IActionResult Detail(int id)
+        public async Task<IActionResult> Detail(int id)
         {
             if (id <= 0) return BadRequest();
-            Product product = _context.Products
+            Product product =await _context.Products
                 .Include(p => p.ProductImages)
                 .Include(p=>p.Category)
                 .Include(p => p.ProductTags)
@@ -30,11 +27,15 @@ namespace FrontToBack_Pronia.Controllers
                 .ThenInclude(p=>p.Color)
                 .Include(p=>p.ProductSizes)
                 .ThenInclude(p=>p.Size)
-                .FirstOrDefault(x => x.Id == id);
+                .FirstOrDefaultAsync(x => x.Id == id);
             if(product is null) return NotFound();
 
             
-            List<Product> products =_context.Products.Include(p => p.Category).Include(p => p.ProductImages).Where(p=>p.CategoryId==product.CategoryId && p.Id!=product.Id).ToList();
+            List<Product> products = await _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.ProductImages)
+                .Where(p=>p.CategoryId==product.CategoryId && p.Id!=product.Id)
+                .ToListAsync();
 
 
             ProductVM productVM = new ProductVM

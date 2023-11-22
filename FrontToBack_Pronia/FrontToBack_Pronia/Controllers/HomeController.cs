@@ -16,13 +16,20 @@ namespace FrontToBack_Pronia.Controllers
         }
 
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            List<Shipping> shippings = _context.Shippings.ToList();
-            List<Slider> sliders = _context.Sliders.ToList();
-            List<Product> featureds = _context.Products.OrderBy(f=>f.Order%2==1).Take(8).Include(f => f.ProductImages).ToList();
-            List<Product> latests = _context.Products.OrderByDescending(l => l.Order).Take(8).Include(f => f.ProductImages).ToList();
-            List<Product> newproducts = _context.Products.OrderByDescending(l => l.Order).Take(4).Include(f => f.ProductImages).ToList();
+            List<Shipping> shippings =await _context.Shippings.ToListAsync();
+            List<Slider> sliders =await _context.Sliders.ToListAsync();
+            List<Product> featureds =await _context.Products
+                .OrderBy(f => f.Order % 2 == 1)
+                .Take(8).Include(f => f.ProductImages.Where(pi => pi.IsPrimary != null)).ToListAsync();
+            List<Product> latests =await _context.Products
+                .OrderByDescending(l => l.Order)
+                .Take(8)
+                .Include(f => f.ProductImages.Where(pi=>pi.IsPrimary!=null)).ToListAsync();
+            List<Product> newproducts =await _context.Products
+                .OrderByDescending(l => l.Order).Take(4)
+                .Include(f => f.ProductImages.Where(pi => pi.IsPrimary != null)).ToListAsync();
 
             HomeVM homeVM = new HomeVM 
             {
