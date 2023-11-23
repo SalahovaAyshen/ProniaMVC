@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FrontToBack_Pronia")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d294effc667408ec69584878d0c26460c8117f78")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3e8d2eaaf76d9f58dbb2409aa1a0257121f324af")]
 [assembly: System.Reflection.AssemblyProductAttribute("FrontToBack_Pronia")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FrontToBack_Pronia")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

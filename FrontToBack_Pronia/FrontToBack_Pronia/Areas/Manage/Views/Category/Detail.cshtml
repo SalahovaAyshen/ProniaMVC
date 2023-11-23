@@ -1,0 +1,28 @@
+﻿@model List<Product>
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="row">
+        <div class="col log-6">
+            
+                @foreach (var item in Model)
+                {
+                    <a asp-controller="product" asp-action="detail" asp-route-id="@item.Id">
+                        <img style="width:200px; height:200px" class="img-full"
+                             src="~/assets/images/website-images/@item.ProductImages.FirstOrDefault(p=>p.IsPrimary==true)?.ImageUrl"
+                             alt="Product Image" />
+                    </a>
+
+                  <P>Name: @item.Name</P>
+                  <P>Price: $@item.Price</P>
+                  <p>SKU: @item.SKU</p>
+                  <p>Description: @item.FullDescription</p>
+                 
+                }
+        </div>
+        </div>
+    </div>
+</div>
+
+
+
+                       
