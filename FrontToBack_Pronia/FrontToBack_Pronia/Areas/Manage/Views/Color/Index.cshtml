@@ -1,4 +1,5 @@
-﻿@{
+﻿@model List<Color>
+@{
     int count = 0;
 }
 <div class="main-panel">
@@ -42,9 +43,9 @@
                                                 @color.ProductColors.Count
                                             </td>
                                             <td>
-                                                <a class="btn btn-warning btn-rounded btn-fw btn-info"><i class="mdi mdi-pencil"></i></a>
-                                                <a class="btn btn-danger btn-rounded btn-fw btn-info"><i class="mdi mdi-delete"></i></a>
-                                                <a class="btn btn-primary btn-rounded btn-fw"><i class="mdi mdi-open-in-new"></i></a>
+                                                <a asp-controller="color" asp-action="update" asp-route-id="@color.Id" class="btn btn-warning btn-rounded btn-fw btn-info"><i class="mdi mdi-pencil"></i></a>
+                                                <a asp-controller="color" asp-action="delete" asp-route-id="@color.Id" class="btn btn-danger btn-rounded btn-fw btn-info"><i class="mdi mdi-delete"></i></a>
+                                                <a asp-controller="color" asp-action="detail" asp-route-id="@color.Id" class="btn btn-primary btn-rounded btn-fw"><i class="mdi mdi-open-in-new"></i></a>
                                             </td>
                                         </tr>
                                     }

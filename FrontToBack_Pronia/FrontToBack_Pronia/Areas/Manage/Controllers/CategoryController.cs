@@ -19,6 +19,8 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
 
             return View(categories);
         }
+
+        //Create
         public IActionResult Create()
         {
             return View();
@@ -42,6 +44,7 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
             return Redirect(nameof(Index)); 
         }
 
+        //Update
         public async Task<IActionResult> Update(int id)
         {
             if (id <= 0) return BadRequest();
@@ -55,7 +58,7 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
             if (!ModelState.IsValid) return View();
             Category exist = await _context.Categories.FirstOrDefaultAsync(c=>c.Id == id);
             if (exist == null) return NotFound();
-            bool result = await _context.Categories.AnyAsync(c => c.Name == category.Name && c.Id != id);
+            bool result = await _context.Categories.AnyAsync(c => c.Name.Trim() == category.Name.Trim() && c.Id != id);
             if (result)
             {
                 ModelState.AddModelError("Name", "Already exists");
@@ -65,6 +68,7 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        //Delete
         public async Task<IActionResult> Delete(int id)
         {
             if(id<=0) return BadRequest();
@@ -74,6 +78,8 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        //Detail
         public async Task<IActionResult> Detail(int id)
         {
             if (id<=0) return BadRequest();
