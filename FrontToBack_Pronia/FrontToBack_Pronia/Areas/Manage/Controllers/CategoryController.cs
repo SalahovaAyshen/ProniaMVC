@@ -83,19 +83,19 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
         public async Task<IActionResult> Detail(int id)
         {
             if (id<=0) return BadRequest();
-            Category category = await _context.Categories.FirstOrDefaultAsync(c=>c.Id==id);
+            Category category = await _context.Categories.Include(c=>c.Products).ThenInclude(c=>c.ProductImages).FirstOrDefaultAsync(c=>c.Id==id);
 
-            List<Product> products = await _context.Products
-                .Where(p=>p.CategoryId==id)
-                .Include(p => p.ProductImages)
-                .Include(p => p.Category)
-                .Include(p => p.ProductTags)
-                .ThenInclude(p => p.Tag)
-                .Include(p => p.ProductColors)
-                .ThenInclude(p => p.Color)
-                .Include(p => p.ProductSizes)
-                .ThenInclude(p => p.Size).ToListAsync();
-           return View(products);
+           // List<Product> products = await _context.Products
+           //     .Where(p=>p.CategoryId==id)
+           //     .Include(p => p.ProductImages)
+           //     .Include(p => p.Category)
+           //     .Include(p => p.ProductTags)
+           //     .ThenInclude(p => p.Tag)
+           //     .Include(p => p.ProductColors)
+           //     .ThenInclude(p => p.Color)
+           //     .Include(p => p.ProductSizes)
+           //     .ThenInclude(p => p.Size).ToListAsync();
+           return View(category);
         }
     }
 }

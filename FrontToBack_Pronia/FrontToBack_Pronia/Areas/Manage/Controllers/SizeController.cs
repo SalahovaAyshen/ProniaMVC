@@ -82,5 +82,7 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+      
     }
 }

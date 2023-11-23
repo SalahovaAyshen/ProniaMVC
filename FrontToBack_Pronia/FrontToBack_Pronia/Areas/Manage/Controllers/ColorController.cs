@@ -79,5 +79,13 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        //Detail
+        public async Task<IActionResult> Detail(int id)
+        {
+            if(id<=0) return BadRequest();
+            Color color = await _context.Colors.Include(c=>c.ProductColors).ThenInclude(c=>c.Product).FirstOrDefaultAsync(c=>c.Id==id);
+            return View(color);
+        }
     }
 }
