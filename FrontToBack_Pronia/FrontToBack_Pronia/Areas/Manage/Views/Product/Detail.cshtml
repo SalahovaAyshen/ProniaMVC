@@ -1,0 +1,44 @@
+﻿@model Product
+
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="row">
+            <div class="col-4">
+                <p>Primary image</p>
+              <img style="width:250px; height:250px" src="~/assets/images/website-images/@Model.ProductImages.FirstOrDefault()?.ImageUrl"></img>
+              <p>Secondary image</p>
+                <img style="width:250px; height:250px" src="~/assets/images/website-images/@Model.ProductImages.FirstOrDefault(p=>p.IsPrimary==false)?.ImageUrl"></img>
+            
+            </div>
+            <div class="col-8">
+                <p class="title">Title: @Model.Name</p>
+                <p>Price: @Model.Price</p>
+                <p>Category: @Model.Category.Name</p>
+                <p>Description: @Model.Description</p>
+                <p>Fulldescription: @Model.FullDescription</p>
+                <p>Order: @Model.Order</p>
+                <p>SKU: @Model.SKU</p>
+                <hr></hr>
+                <span>Colors:</span>
+                    @foreach (var item in Model.ProductColors)
+                    {
+                     
+                       <li>@item.Color.Name </li>
+
+                    }
+                    <hr></hr>
+                <span>Sizes:</span>
+                @foreach (var item in Model.ProductSizes)
+                {
+                    <li>@item.Size.Name</li>
+                }
+                <hr></hr>
+                <span>Tags:</span>
+                @foreach (var item in Model.ProductTags)
+                {
+                    <li>@item.Tag.Name</li>
+                }
+            </div>
+        </div>
+    </div>
+</div>

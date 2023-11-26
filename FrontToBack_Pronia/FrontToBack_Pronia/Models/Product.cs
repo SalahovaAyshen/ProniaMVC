@@ -12,7 +12,7 @@ namespace FrontToBack_Pronia.Models
         public List<ProductImage>? ProductImages { get; set; }
         public string? FullDescription { get; set; }
         public int? CategoryId { get; set; }
-        public Category? Category { get; set; }
+        public Category Category { get; set; }
         public string? SKU { get; set; }
         public List<ProductTag> ProductTags { get; set; }
         public List<ProductColor> ProductColors { get; set; }

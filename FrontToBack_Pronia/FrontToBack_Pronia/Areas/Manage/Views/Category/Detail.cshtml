@@ -1,25 +1,28 @@
 ﻿@model Category
 <div class="main-panel">
     <div class="content-wrapper">
+        <h3>@Model.Name category products</h3>
+        <hr class="text-success" style="height:2px" />
+
         <div class="row">
-       
             
-                @foreach (var item in Model.Products)
-                {
-                <div class="col log-4">
-                    <a asp-controller="category" asp-action="detail" asp-route-id="@item.Id">
-                        <img style="width:200px; height:200px" class="img-full"
-                             src="~/assets/images/website-images/@item.ProductImages.FirstOrDefault(p=>p.IsPrimary==true)?.ImageUrl"
-                             alt="Product Image" />
-                    </a>
+            @foreach (var item in Model.Products)
+            {
+                <div class="row pt-4">
+                <div class="col-3 ">s
+                    <img style="width:150px; height:150px" src="~/assets/images/website-images/@item.ProductImages.FirstOrDefault()?.ImageUrl"></img>
                 </div>
-              
-                  <P>Name: @item.Name</P>
-                  <P>Price: $@item.Price</P>
-                  <p>SKU: @item.SKU</p>
-                  <p>Description: @item.FullDescription</p>
-                }
-        
+           
+                   <div class="col-9 ">
+                        <p>Name: @item.Name</p>
+                        <p>Price: $@item.Price</p>
+                        <p>Description: @item.FullDescription</p>
+                        <p>SKU: @item.SKU</p>
+                   </div>
+              </div >
+                <hr class="text-success" style="height:2px" />
+
+            }
         </div>
     </div>
 </div>

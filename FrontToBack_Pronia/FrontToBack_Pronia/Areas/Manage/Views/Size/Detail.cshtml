@@ -1,0 +1,24 @@
+﻿@model Size
+<div class="main-panel">
+    <div class="content-wrapper">
+        <h3>@Model.Name size products</h3>
+        <hr class="text-success" style="height:2px" />
+
+        <div class="row">
+
+            @foreach (var item in Model.ProductSizes)
+            {
+                <div class="row pt-4">
+                    <div class="col-9 ">
+                        <p>Name: @item.Products.Name</p>
+                        <p>Price: $@item.Products.Price</p>
+                        <p>Description: @item.Products.FullDescription</p>
+                        <p>SKU: @item.Products.SKU</p>
+                        <hr class="text-success" style="height:2px" />
+                       
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

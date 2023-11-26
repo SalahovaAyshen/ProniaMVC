@@ -62,12 +62,28 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcTWFuYWdlXFZpZXdzXERhc2hib2FyZFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/hp/Desktop/FTB_13.11/FrontToBack_Pronia/FrontToBack_Pronia/Areas/Manage/Views/Product/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcTWFuYWdlXFZpZXdzXFByb2R1Y3RcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/hp/Desktop/FTB_13.11/FrontToBack_Pronia/FrontToBack_Pronia/Areas/Manage/Views/Product/Detail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcTWFuYWdlXFZpZXdzXFByb2R1Y3RcRGV0YWlsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/hp/Desktop/FTB_13.11/FrontToBack_Pronia/FrontToBack_Pronia/Areas/Manage/Views/Product/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcTWFuYWdlXFZpZXdzXFByb2R1Y3RcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/hp/Desktop/FTB_13.11/FrontToBack_Pronia/FrontToBack_Pronia/Areas/Manage/Views/Shared/_ManageLayout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcTWFuYWdlXFZpZXdzXFNoYXJlZFxfTWFuYWdlTGF5b3V0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/hp/Desktop/FTB_13.11/FrontToBack_Pronia/FrontToBack_Pronia/Areas/Manage/Views/Size/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcTWFuYWdlXFZpZXdzXFNpemVcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/hp/Desktop/FTB_13.11/FrontToBack_Pronia/FrontToBack_Pronia/Areas/Manage/Views/Size/Detail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcTWFuYWdlXFZpZXdzXFNpemVcRGV0YWlsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/hp/Desktop/FTB_13.11/FrontToBack_Pronia/FrontToBack_Pronia/Areas/Manage/Views/Size/Index.cshtml]
@@ -96,6 +112,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/hp/Desktop/FTB_13.11/FrontToBack_Pronia/FrontToBack_Pronia/Areas/Manage/Views/Tag/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcTWFuYWdlXFZpZXdzXFRhZ1xDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/hp/Desktop/FTB_13.11/FrontToBack_Pronia/FrontToBack_Pronia/Areas/Manage/Views/Tag/Detail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcTWFuYWdlXFZpZXdzXFRhZ1xEZXRhaWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/hp/Desktop/FTB_13.11/FrontToBack_Pronia/FrontToBack_Pronia/Areas/Manage/Views/Tag/Index.cshtml]

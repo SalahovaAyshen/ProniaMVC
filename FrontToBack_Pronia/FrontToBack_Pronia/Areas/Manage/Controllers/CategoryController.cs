@@ -1,7 +1,9 @@
-﻿using FrontToBack_Pronia.DAL;
+﻿using FrontToBack_Pronia.Areas.Manage.ViewModels;
+using FrontToBack_Pronia.DAL;
 using FrontToBack_Pronia.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing;
 
 namespace FrontToBack_Pronia.Areas.Manage.Controllers
 {
@@ -27,18 +29,23 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Category category)
+        public async Task<IActionResult> Create(CreateCategoryVM categoryVM)
         {
             if (!ModelState.IsValid)
             {
                 return View();
             }
-            bool result = _context.Categories.Any(c => c.Name.Trim() == category.Name.Trim());
+            bool result = _context.Categories.Any(c => c.Name.Trim() == categoryVM.Name.Trim());
             if (result)
             {
                 ModelState.AddModelError("Name", "This category already exists");
                 return View();
             }
+            Category category = new Category
+            {
+                Name = categoryVM.Name,
+            };
+
            await _context.Categories.AddAsync(category);
            await _context.SaveChangesAsync();
             return Redirect(nameof(Index)); 
@@ -50,21 +57,25 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
             if (id <= 0) return BadRequest();
             Category category=await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
             if (category == null) return NotFound();
-            return View(category);
+            UpdateCategoryVM categoryVM = new UpdateCategoryVM
+            {
+                Name = category.Name,
+            };
+            return View(categoryVM);
         }
         [HttpPost]
-        public async Task<IActionResult> Update(int id, Category category)
+        public async Task<IActionResult> Update(int id, UpdateCategoryVM categoryVM)
         {
             if (!ModelState.IsValid) return View();
             Category exist = await _context.Categories.FirstOrDefaultAsync(c=>c.Id == id);
             if (exist == null) return NotFound();
-            bool result = await _context.Categories.AnyAsync(c => c.Name.Trim() == category.Name.Trim() && c.Id != id);
+            bool result = await _context.Categories.AnyAsync(c => c.Name.Trim() == categoryVM.Name.Trim() && c.Id != id);
             if (result)
             {
                 ModelState.AddModelError("Name", "Already exists");
-                return View(exist);
+                return View(categoryVM);
             }
-            exist.Name = category.Name;
+            exist.Name = categoryVM.Name;
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -82,20 +93,10 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
         //Detail
         public async Task<IActionResult> Detail(int id)
         {
-            if (id<=0) return BadRequest();
-            Category category = await _context.Categories.Include(c=>c.Products).ThenInclude(c=>c.ProductImages).FirstOrDefaultAsync(c=>c.Id==id);
-
-           // List<Product> products = await _context.Products
-           //     .Where(p=>p.CategoryId==id)
-           //     .Include(p => p.ProductImages)
-           //     .Include(p => p.Category)
-           //     .Include(p => p.ProductTags)
-           //     .ThenInclude(p => p.Tag)
-           //     .Include(p => p.ProductColors)
-           //     .ThenInclude(p => p.Color)
-           //     .Include(p => p.ProductSizes)
-           //     .ThenInclude(p => p.Size).ToListAsync();
-           return View(category);
+           if (id<=0) return BadRequest();
+           Category category = await _context.Categories.Include(c=>c.Products).ThenInclude(c=>c.ProductImages).FirstOrDefaultAsync(c=>c.Id==id);
+            if (category == null) return NotFound();
+            return View(category);
         }
     }
 }

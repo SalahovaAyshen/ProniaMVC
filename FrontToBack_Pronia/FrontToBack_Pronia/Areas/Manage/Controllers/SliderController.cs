@@ -1,4 +1,5 @@
-﻿using FrontToBack_Pronia.DAL;
+﻿using FrontToBack_Pronia.Areas.Manage.ViewModels;
+using FrontToBack_Pronia.DAL;
 using FrontToBack_Pronia.Models;
 using FrontToBack_Pronia.Utilities.Extensions;
 using Microsoft.AspNetCore.Mvc;
@@ -29,25 +30,34 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Create(Slider slider) 
+        public async Task<IActionResult> Create(CreateSliderVM sliderVM) 
         {
-            if (slider.Photo is null)
+            if (!ModelState.IsValid) return View();
+            if(sliderVM.Order<0 || await _context.Sliders.FirstOrDefaultAsync(s=>s.Order==sliderVM.Order) is not null)
             {
-                ModelState.AddModelError("Photo", "Photo must be chosen");
+                ModelState.AddModelError("Order", "Order is negative number or already existed");
                 return View();
             }
-            if (!slider.Photo.ValidateType("image/"))
+            if (!sliderVM.Photo.ValidateType("image/"))
             {
                 ModelState.AddModelError("Photo", "Photo must be image type");
                 return View();
             }
-            if (!slider.Photo.VaidateSize(2*1024))
+            if (!sliderVM.Photo.VaidateSize(2*1024))
             {
                 ModelState.AddModelError("Photo", "Photo can't be more than 2mb");
                 return View();
             }
-            slider.ImageURL =await slider.Photo.CreateFileAsync(_env.WebRootPath, "assets", "images", "slider");
-
+           string fileName=await sliderVM.Photo.CreateFileAsync(_env.WebRootPath, "assets", "images", "slider");
+            Slider slider = new Slider
+            {
+                Title = sliderVM.Title,
+                Offer = sliderVM.Offer,
+                Description = sliderVM.Description,
+                ImageURL = fileName,
+                Button = sliderVM.Button,
+                Order = sliderVM.Order
+            };
             await _context.Sliders.AddAsync(slider);
             await _context.SaveChangesAsync();
 
@@ -74,39 +84,50 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
             if (id <= 0) return BadRequest();
             Slider existed = await _context.Sliders.FirstOrDefaultAsync(s => s.Id == id);
             if (existed == null) return NotFound();
-            return View(existed);
+            UpdateSliderVM sliderVM = new UpdateSliderVM
+            {
+                Title = existed.Title,
+                Offer = existed.Offer,
+                Description = existed.Description,
+                Button = existed.Button,
+                Order = existed.Order,
+                ImageURL = existed.ImageURL
+            };
+            return View(sliderVM);
 
         }
         [HttpPost]
-        public async Task<IActionResult> Update(int id, Slider slider)
+        public async Task<IActionResult> Update(int id, UpdateSliderVM sliderVM)
         {
-            Slider existed = await _context.Sliders.FirstOrDefaultAsync(s=>s.Id==id);
+  
+            if (!ModelState.IsValid) return View(sliderVM);
+            Slider existed = await _context.Sliders.FirstOrDefaultAsync(s => s.Id == id);
             if (existed is null) return NotFound();
-            if (ModelState.IsValid) return View(existed);
-
-            if (slider.Photo != null)
+           
+            if (sliderVM.Photo != null)
             {
-                if (!slider.Photo.ValidateType("image/"))
+                if (!sliderVM.Photo.ValidateType("image/"))
                 {
                     ModelState.AddModelError("photo", "photo must be image type");
-                    return View(existed);
+                    return View(sliderVM);
                 }
 
-                if (!slider.Photo.VaidateSize(2 * 1024))
+                if (!sliderVM.Photo.VaidateSize(2 * 1024))
                 {
                     ModelState.AddModelError("photo", "photo can't be more than 2mb");
-                    return View(existed);
+                    return View(sliderVM);
                 }
 
-                string filename = await slider.Photo.CreateFileAsync(_env.WebRootPath, "assets", "images", "slider");
+                string filename = await sliderVM.Photo.CreateFileAsync(_env.WebRootPath, "assets", "images", "slider");
                 existed.ImageURL.DeleteFile(_env.WebRootPath, "assets", "images", "slider");
                 existed.ImageURL = filename;
             }
 
-            existed.Title=slider.Title;
-            existed.Offer=slider.Offer;
-            existed.Order=slider.Order;
-            existed.Description=slider.Description;
+            existed.Title=sliderVM.Title;
+            existed.Offer=sliderVM.Offer;
+            existed.Order=sliderVM.Order;
+            existed.Description=sliderVM.Description;
+            existed.Button=sliderVM.Button;
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

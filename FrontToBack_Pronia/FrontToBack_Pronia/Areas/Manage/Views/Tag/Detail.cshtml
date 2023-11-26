@@ -1,0 +1,22 @@
+﻿@model Tag
+<div class="main-panel">
+    <div class="content-wrapper">
+        <h3>@Model.Name tag products</h3>
+        <hr class="text-success" style="height:2px" />
+
+        <div class="row">
+
+            @foreach (var item in Model.ProductTags)
+            {
+                    <div class="col-9 ">
+                        <p>Name: @item.Product.Name</p>
+                        <p>Price: $@item.Product.Price</p>
+                        <p>Description: @item.Product.FullDescription</p>
+                        <p>SKU: @item.Product.SKU</p>
+                    <hr class="text-success" style="height:2px" />
+
+                    </div>
+            }       
+            </div>
+    </div>
+</div>
