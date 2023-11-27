@@ -58,6 +58,16 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        //Delete
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (id <= 0) return BadRequest();
+            Product product = await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
+            if (product == null) return NotFound();
+            _context.Products.Remove(product);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
         public async Task<IActionResult> Detail(int id)
         {
             Product product = await _context.Products

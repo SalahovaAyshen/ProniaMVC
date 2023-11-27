@@ -13,6 +13,7 @@ namespace FrontToBack_Pronia.Areas.Manage.ViewModels
         public int Order { get; set; }
         public string Description { get; set; }
         public string FullDescription { get; set; }
+        [Required]
         public int? CategoryId { get; set; }
         public string? SKU { get; set; }
         public List<Category>? Categories { get; set; }
