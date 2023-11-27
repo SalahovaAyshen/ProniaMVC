@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
+﻿
 namespace FrontToBack_Pronia.Models
 {
     public class Category
