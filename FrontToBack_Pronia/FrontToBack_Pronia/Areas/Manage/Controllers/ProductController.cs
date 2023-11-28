@@ -1,9 +1,9 @@
 ﻿using FrontToBack_Pronia.Areas.Manage.ViewModels;
 using FrontToBack_Pronia.DAL;
 using FrontToBack_Pronia.Models;
+using FrontToBack_Pronia.Utilities.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace FrontToBack_Pronia.Areas.Manage.Controllers
 {
@@ -11,9 +11,11 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
     public class ProductController : Controller
     {
         private readonly AppDbContext _context;
-        public ProductController(AppDbContext context)
+        private readonly IWebHostEnvironment _env;
+        public ProductController(AppDbContext context, IWebHostEnvironment env)
         {
             _context = context;
+            _env = env;
         }
 
         public async Task<IActionResult> Index()
@@ -68,6 +70,41 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
                     return View(productVM);
                 }
             }
+
+            if (!productVM.MainPhoto.ValidateType("image/"))
+            {
+                ModelState.AddModelError("MainPhoto", "Image type error");
+                return View(productVM);
+            }
+            if (!productVM.MainPhoto.VaidateSize(500))
+            {
+                ModelState.AddModelError("MainPhoto", "Image size error");
+                return View(productVM);
+            }
+            if (!productVM.HoverPhoto.ValidateType("image/"))
+            {
+                ModelState.AddModelError("HoverPhoto", "Image type error");
+                return View(productVM);
+            }
+            if (!productVM.HoverPhoto.VaidateSize(500))
+            {
+                ModelState.AddModelError("HoverPhoto", "Image size error");
+                return View(productVM); 
+            }
+
+            ProductImage mainPhoto = new ProductImage
+            {
+                IsPrimary = true,
+                ImageUrl = await productVM.MainPhoto.CreateFileAsync(_env.WebRootPath, "assets", "images", "website-images"),
+                Alternative = productVM.Name
+
+            };
+            ProductImage hoverPhoto = new ProductImage
+            {
+                IsPrimary = false,
+                ImageUrl = await productVM.HoverPhoto.CreateFileAsync(_env.WebRootPath, "assets", "images", "website-images"),
+                Alternative = productVM.Name
+            };
             Product product = new Product
             {
                 Name = productVM.Name,
@@ -79,7 +116,8 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
                 CategoryId = productVM.CategoryId,
                 ProductTags = new List<ProductTag>(),
                 ProductColors = new List<ProductColor>(),
-                ProductSizes = new List<ProductSize>()
+                ProductSizes = new List<ProductSize>(),
+                ProductImages = new List<ProductImage> { mainPhoto, hoverPhoto},
             };
             if(productVM.TagIds != null)
             {
@@ -119,10 +157,35 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
                 };
                 product.ProductSizes.Add(productSize);
             }
+            TempData["Message"] = "";
+           if(productVM.AdditionalPhotos != null)
+            {
+                foreach (IFormFile photos in productVM.AdditionalPhotos)
+                {
+                    if (!photos.ValidateType("image/"))
+                    {
+                        TempData["Message"] = $"<div class=\"alert alert-danger\" role=\"alert\">\r\n  {photos.FileName} the file type doesn't match the required one!\r\n</div>";
+                        continue;
+                    }
+                    if (!photos.VaidateSize(500))
+                    {
+                        TempData["Message"] = $"<div class=\"alert alert-danger\" role=\"alert\">\r\n  {photos.FileName} the file size doesn't match the required one\r\n</div>";
+                        continue;
+                    }
 
+                    product.ProductImages.Add(new ProductImage
+                    {
+                        IsPrimary = null,
+                        ImageUrl = await photos.CreateFileAsync(_env.WebRootPath, "assets", "images", "website-images"),
+                        Alternative = productVM.Name
+                    });
+                }
+            }
             await _context.Products.AddAsync(product);
             await _context.SaveChangesAsync();
+            TempData["Message"] = $"<div class=\"alert alert-success\" role=\"alert\">\r\n  Successfully created {productVM.Name} product\r\n</div>";
             return RedirectToAction(nameof(Index));
+
         }
 
         //Update
@@ -228,6 +291,7 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
             if (id <= 0) return BadRequest();
             Product product = await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
             if (product == null) return NotFound();
+           
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
