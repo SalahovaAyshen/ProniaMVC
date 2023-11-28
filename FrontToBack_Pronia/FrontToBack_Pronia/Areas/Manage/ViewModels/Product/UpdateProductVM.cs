@@ -16,7 +16,7 @@ namespace FrontToBack_Pronia.Areas.Manage.ViewModels
         [Required]
         public int CategoryId { get; set; }
         public string? SKU { get; set; }
-        public List<int> TagIds { get; set; }
+        public List<int>? TagIds { get; set; }
         public List<int> ColorIds { get; set; }
         public List<int> SizeIds { get; set; }
         public List<Size>? Sizes { get; set; }

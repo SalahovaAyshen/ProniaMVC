@@ -3,6 +3,7 @@ using FrontToBack_Pronia.DAL;
 using FrontToBack_Pronia.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace FrontToBack_Pronia.Areas.Manage.Controllers
 {
@@ -51,6 +52,22 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
                 return View(productVM);
             }
 
+            foreach (var item in productVM.ColorIds)
+            {
+                if (!await _context.Colors.AnyAsync(x => x.Id == item))
+                {
+                    ModelState.AddModelError("ColorIds", "Not found tag id");
+                    return View(productVM);
+                }
+            }
+            foreach (var item in productVM.SizeIds)
+            {
+                if (!await _context.Sizes.AnyAsync(x => x.Id == item))
+                {
+                    ModelState.AddModelError("SizeIds", "Not found tag id");
+                    return View(productVM);
+                }
+            }
             Product product = new Product
             {
                 Name = productVM.Name,
@@ -64,15 +81,27 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
                 ProductColors = new List<ProductColor>(),
                 ProductSizes = new List<ProductSize>()
             };
-            foreach (int item in productVM.TagIds)
+            if(productVM.TagIds != null)
             {
-                ProductTag productTag = new ProductTag
+                foreach (var item in productVM.TagIds)
                 {
-                    TagId = item,
+                    if (!await _context.Tags.AnyAsync(x => x.Id == item))
+                    {
+                        ModelState.AddModelError("TagIds", "Not found tag id");
+                        return View(productVM);
+                    }
+                }
+                foreach (int item in productVM.TagIds)
+                {
+                    ProductTag productTag = new ProductTag
+                    {
+                        TagId = item,
 
-                };
-                product.ProductTags.Add(productTag);
+                    };
+                    product.ProductTags.Add(productTag);
+                }
             }
+            
             foreach (int item in productVM.ColorIds)
             {
                 ProductColor productColor = new ProductColor
@@ -146,72 +175,38 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
                 return View(productVM);
             }
 
-            foreach (ProductTag pTag in existed.ProductTags)
+            //For tag
+            if(productVM.TagIds != null)
             {
-                if (!productVM.TagIds.Exists(tId => tId == pTag.TagId))
+                existed.ProductTags.RemoveAll(pt => !productVM.TagIds.Exists(x => x == pt.TagId));
+                var tagList = productVM.TagIds.Where(ti => !existed.ProductTags.Any(x => x.TagId == ti)).ToList();
+                foreach (var prod in tagList)
                 {
-                    _context.ProductTags.Remove(pTag);
+                    existed.ProductTags.Add(new ProductTag { TagId = prod });
                 }
             }
-
-            foreach (int tId in productVM.TagIds)
+            else
             {
-                if (!existed.ProductTags.Any(pt => pt.TagId == tId))
-                {
-                    bool result = await _context.Tags.AnyAsync(pt => pt.Id == tId);
-                    if (!result)
-                    {
-                        ModelState.AddModelError("TagIds", "Not found tag id");
-                        return View(productVM);
-                    }
-                    existed.ProductTags.Add(new ProductTag { TagId = tId });
-
-                }
+                existed.ProductTags = new List<ProductTag>();
             }
 
-            foreach (ProductColor pColor in existed.ProductColors)
+            //For Color
+            existed.ProductColors.RemoveAll(pc => !productVM.ColorIds.Exists(x => x == pc.ColorId));
+            var colorList = productVM.ColorIds.Where(ci => !existed.ProductColors.Any(x => x.ColorId == ci));
+            foreach (var color in colorList)
             {
-                if (!productVM.ColorIds.Exists(cId => cId == pColor.ColorId))
-                {
-                    _context.ProductColors.Remove(pColor);
-                }
+                existed.ProductColors.Add(new ProductColor { ColorId = color });
             }
-            foreach (int cId in productVM.ColorIds)
-            {
-                if (!existed.ProductColors.Any(pc => pc.ColorId == cId))
-                {
-                    bool result = await _context.Colors.AnyAsync(pc => pc.Id == cId);
-                    if (!result)
-                    {
-                        ModelState.AddModelError("ColorIds", "Not found color id");
-                        return View(productVM);
-                    }
+           
 
-                    existed.ProductColors.Add(new ProductColor { ColorId = cId });
-                }
-            }
-
-            foreach (ProductSize pSize in existed.ProductSizes)
+            //For Size
+            existed.ProductSizes.RemoveAll(ps => !productVM.SizeIds.Exists(x => x == ps.SizeId));
+            var sizeList = productVM.SizeIds.Where(si => !existed.ProductSizes.Any(x => x.SizeId == si));
+            foreach (var size in sizeList)
             {
-                if (!productVM.SizeIds.Exists(sId => sId == pSize.SizeId))
-                {
-                    _context.ProductSizes.Remove(pSize);
-                }
+                existed.ProductSizes.Add(new ProductSize { SizeId = size });
             }
-
-            foreach (int sId in productVM.SizeIds)
-            {
-                if (!existed.ProductSizes.Any(ps => ps.SizeId == sId))
-                {
-                    bool result = await _context.Sizes.AnyAsync(ps => ps.Id == sId);
-                    if (!result)
-                    {
-                        ModelState.AddModelError("SizeIds", "Not found size id");
-                        return View(productVM);
-                    }
-                    existed.ProductSizes.Add(new ProductSize { SizeId = sId });
-                }
-            }
+          
 
             existed.Name = productVM.Name;
                 existed.Price = productVM.Price;
