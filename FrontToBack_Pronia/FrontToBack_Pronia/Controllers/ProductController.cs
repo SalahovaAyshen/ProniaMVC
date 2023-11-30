@@ -28,7 +28,7 @@ namespace FrontToBack_Pronia.Controllers
                 .Include(p=>p.ProductSizes)
                 .ThenInclude(p=>p.Size)
                 .FirstOrDefaultAsync(x => x.Id == id);
-            if(product is null) return NotFound();
+            if(product == null) return NotFound();
 
             
             List<Product> products = await _context.Products
@@ -42,8 +42,6 @@ namespace FrontToBack_Pronia.Controllers
             {
                 Products = product,
                 ProductList = products
-               
-
             };
             return View(productVM);
         }

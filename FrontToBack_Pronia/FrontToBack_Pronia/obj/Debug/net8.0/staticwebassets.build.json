@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "HUcXUZiAVg+amwFz0lZh0UpQLD/iVA7Jeka7PXUOd48=",
+  "Hash": "OB01SDnv6HXsJnPVJBeHkW+QKRVOkZ+QSzM42xb6EIo=",
   "Source": "FrontToBack_Pronia",
   "BasePath": "_content/FrontToBack_Pronia",
   "Mode": "Default",
@@ -3380,25 +3380,6 @@
       "OriginalItemSpec": "wwwroot\\assets\\images\\website-images\\af836d3b-390e-4678-9bcb-327fbdc1a0ca1-2-370x300.jpg"
     },
     {
-      "Identity": "C:\\Users\\hp\\Desktop\\FTB_13.11\\FrontToBack_Pronia\\FrontToBack_Pronia\\wwwroot\\assets\\images\\website-images\\b5478165-4bc8-4f24-94d3-955e8459892a1-8-270x300.jpg",
-      "SourceId": "FrontToBack_Pronia",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\hp\\Desktop\\FTB_13.11\\FrontToBack_Pronia\\FrontToBack_Pronia\\wwwroot\\",
-      "BasePath": "_content/FrontToBack_Pronia",
-      "RelativePath": "assets/images/website-images/b5478165-4bc8-4f24-94d3-955e8459892a1-8-270x300.jpg",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\assets\\images\\website-images\\b5478165-4bc8-4f24-94d3-955e8459892a1-8-270x300.jpg"
-    },
-    {
       "Identity": "C:\\Users\\hp\\Desktop\\FTB_13.11\\FrontToBack_Pronia\\FrontToBack_Pronia\\wwwroot\\assets\\images\\website-images\\bb68d1ae-c79e-47af-8c7d-da1be942f9a31-2-370x300.jpg",
       "SourceId": "FrontToBack_Pronia",
       "SourceType": "Discovered",
@@ -3435,6 +3416,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\assets\\images\\website-images\\c556c34e-8fad-4f45-885e-ce9b116ecd541-1-570x633.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\hp\\Desktop\\FTB_13.11\\FrontToBack_Pronia\\FrontToBack_Pronia\\wwwroot\\assets\\images\\website-images\\c5ffdd67-257c-42fe-b943-441dff65d31fpion-2.jpg",
+      "SourceId": "FrontToBack_Pronia",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\hp\\Desktop\\FTB_13.11\\FrontToBack_Pronia\\FrontToBack_Pronia\\wwwroot\\",
+      "BasePath": "_content/FrontToBack_Pronia",
+      "RelativePath": "assets/images/website-images/c5ffdd67-257c-42fe-b943-441dff65d31fpion-2.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\assets\\images\\website-images\\c5ffdd67-257c-42fe-b943-441dff65d31fpion-2.jpg"
     },
     {
       "Identity": "C:\\Users\\hp\\Desktop\\FTB_13.11\\FrontToBack_Pronia\\FrontToBack_Pronia\\wwwroot\\assets\\images\\website-images\\car.png",

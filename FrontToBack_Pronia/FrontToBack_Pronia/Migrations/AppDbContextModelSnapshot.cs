@@ -162,6 +162,10 @@ namespace FrontToBack_Pronia.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("SizeId");
+
                     b.ToTable("ProductSizes");
                 });
 
@@ -186,6 +190,27 @@ namespace FrontToBack_Pronia.Migrations
                     b.HasIndex("TagId");
 
                     b.ToTable("ProductTags");
+                });
+
+            modelBuilder.Entity("FrontToBack_Pronia.Models.Setting", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Settings");
                 });
 
             modelBuilder.Entity("FrontToBack_Pronia.Models.Shipping", b =>
@@ -223,14 +248,10 @@ namespace FrontToBack_Pronia.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ProductSizeId")
-                        .HasColumnType("int");
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductSizeId");
 
                     b.ToTable("Sizes");
                 });
@@ -288,21 +309,6 @@ namespace FrontToBack_Pronia.Migrations
                     b.ToTable("Tags");
                 });
 
-            modelBuilder.Entity("ProductProductSize", b =>
-                {
-                    b.Property<int>("ProductSizesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProductSizesId", "ProductsId");
-
-                    b.HasIndex("ProductsId");
-
-                    b.ToTable("ProductProductSize");
-                });
-
             modelBuilder.Entity("FrontToBack_Pronia.Models.Product", b =>
                 {
                     b.HasOne("FrontToBack_Pronia.Models.Category", "Category")
@@ -342,6 +348,25 @@ namespace FrontToBack_Pronia.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("FrontToBack_Pronia.Models.ProductSize", b =>
+                {
+                    b.HasOne("FrontToBack_Pronia.Models.Product", "Products")
+                        .WithMany("ProductSizes")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FrontToBack_Pronia.Models.Size", "Size")
+                        .WithMany("ProductSizes")
+                        .HasForeignKey("SizeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Products");
+
+                    b.Navigation("Size");
+                });
+
             modelBuilder.Entity("FrontToBack_Pronia.Models.ProductTag", b =>
                 {
                     b.HasOne("FrontToBack_Pronia.Models.Product", "Product")
@@ -361,28 +386,6 @@ namespace FrontToBack_Pronia.Migrations
                     b.Navigation("Tag");
                 });
 
-            modelBuilder.Entity("FrontToBack_Pronia.Models.Size", b =>
-                {
-                    b.HasOne("FrontToBack_Pronia.Models.ProductSize", null)
-                        .WithMany("Sizes")
-                        .HasForeignKey("ProductSizeId");
-                });
-
-            modelBuilder.Entity("ProductProductSize", b =>
-                {
-                    b.HasOne("FrontToBack_Pronia.Models.ProductSize", null)
-                        .WithMany()
-                        .HasForeignKey("ProductSizesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FrontToBack_Pronia.Models.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("FrontToBack_Pronia.Models.Category", b =>
                 {
                     b.Navigation("Products");
@@ -399,12 +402,14 @@ namespace FrontToBack_Pronia.Migrations
 
                     b.Navigation("ProductImages");
 
+                    b.Navigation("ProductSizes");
+
                     b.Navigation("ProductTags");
                 });
 
-            modelBuilder.Entity("FrontToBack_Pronia.Models.ProductSize", b =>
+            modelBuilder.Entity("FrontToBack_Pronia.Models.Size", b =>
                 {
-                    b.Navigation("Sizes");
+                    b.Navigation("ProductSizes");
                 });
 
             modelBuilder.Entity("FrontToBack_Pronia.Models.Tag", b =>

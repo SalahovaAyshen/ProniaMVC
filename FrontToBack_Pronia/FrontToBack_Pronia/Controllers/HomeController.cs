@@ -20,23 +20,14 @@ namespace FrontToBack_Pronia.Controllers
         {
             List<Shipping> shippings =await _context.Shippings.ToListAsync();
             List<Slider> sliders =await _context.Sliders.ToListAsync();
-            List<Product> featureds =await _context.Products
-                .OrderBy(f => f.Order % 2 == 1)
-                .Take(8).Include(f => f.ProductImages.Where(pi => pi.IsPrimary != null)).ToListAsync();
-            List<Product> latests =await _context.Products
-                .OrderByDescending(l => l.Order)
-                .Take(8)
-                .Include(f => f.ProductImages.Where(pi=>pi.IsPrimary!=null)).ToListAsync();
-            List<Product> newproducts =await _context.Products
-                .OrderByDescending(l => l.Order).Take(4)
+            List<Product> newproducts = await _context.Products
+                .OrderByDescending(l => l.Order).Take(12)
                 .Include(f => f.ProductImages.Where(pi => pi.IsPrimary != null)).ToListAsync();
 
             HomeVM homeVM = new HomeVM 
             {
                 Shipping = shippings,
                 Slider = sliders,
-                Featured = featureds,
-                Latest = latests,
                 NewProduct = newproducts
             };
             return View(homeVM);
