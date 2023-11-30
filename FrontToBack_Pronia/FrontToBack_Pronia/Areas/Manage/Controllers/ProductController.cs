@@ -386,9 +386,16 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
             public async Task<IActionResult> Delete(int id)
         {
             if (id <= 0) return BadRequest();
-            Product product = await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
+            Product product = await _context.Products.Include(p=>p.ProductImages).FirstOrDefaultAsync(x => x.Id == id);
             if (product == null) return NotFound();
-           
+           if(product.ProductImages != null)
+            {
+                foreach (ProductImage item in product.ProductImages)
+                {
+                    item.ImageUrl.DeleteFile(_env.WebRootPath, "assets", "images", "website-images");
+
+                }
+            }
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

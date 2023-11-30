@@ -101,11 +101,14 @@
         </div>
     </div>
 </div>
-<script>
-    var btns = document.querySelectorAll(".cust-delete");
+@section DeleteImage{
+    <script>
+        var btns = document.querySelectorAll(".cust-delete");
     btns.forEach(b => {
         b.addEventListener("click", function () {
             b.parentElement.remove();
         })
     })
 </script>
+}
+
