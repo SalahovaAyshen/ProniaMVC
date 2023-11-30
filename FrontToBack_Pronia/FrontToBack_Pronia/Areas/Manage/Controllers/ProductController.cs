@@ -192,7 +192,12 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
         public async Task<IActionResult> Update(int id)
         {
             if (id <= 0) return BadRequest();
-            Product product = await _context.Products.Include(p => p.ProductTags).Include(p => p.ProductColors).Include(p => p.ProductSizes).FirstOrDefaultAsync(x => x.Id == id);
+            Product product = await _context.Products
+                .Include(p => p.ProductTags)
+                .Include(p => p.ProductColors)
+                .Include(p => p.ProductSizes)
+                .Include(p => p.ProductImages)
+                .FirstOrDefaultAsync(x => x.Id == id);
             if (product == null) return NotFound();
             UpdateProductVM productVM = new UpdateProductVM
             {
@@ -206,10 +211,12 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
                 TagIds = product.ProductTags.Select(pt => pt.TagId).ToList(),
                 ColorIds = product.ProductColors.Select(pc => pc.ColorId).ToList(),
                 SizeIds = product.ProductSizes.Select(ps => ps.SizeId).ToList(),
+                ProductImages = product.ProductImages,
                 Categories = await _context.Categories.ToListAsync(),
                 Tags = await _context.Tags.ToListAsync(),
                 Colors = await _context.Colors.ToListAsync(),
                 Sizes = await _context.Sizes.ToListAsync(),
+                
             };
             return View(productVM);
         }
@@ -218,26 +225,53 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
 
         public async Task<IActionResult> Update(int id, UpdateProductVM productVM)
         {
+            Product existed = await _context.Products
+            .Include(p => p.ProductTags)
+            .Include(p => p.ProductColors)
+            .Include(p => p.ProductSizes)
+            .Include(p => p.ProductImages)
+            .FirstOrDefaultAsync(p => p.Id == id);
+
             productVM.Categories = await _context.Categories.ToListAsync();
             productVM.Tags = await _context.Tags.ToListAsync();
             productVM.Colors = await _context.Colors.ToListAsync();
             productVM.Sizes = await _context.Sizes.ToListAsync();
-
-            if (!ModelState.IsValid) return View(productVM);
-
-            Product existed = await _context.Products
-                .Include(p => p.ProductTags)
-                .Include(p => p.ProductColors)
-                .Include(p => p.ProductSizes)
-                .FirstOrDefaultAsync(p => p.Id == id);
+            productVM.ProductImages = existed.ProductImages;
+        
             if (existed == null) return NotFound();
-
+            if (!ModelState.IsValid) return View(productVM);
             if (await _context.Categories.FirstOrDefaultAsync(c => c.Id == productVM.CategoryId) is null)
             {
                 ModelState.AddModelError("CategoryId", "Not found category id");
                 return View(productVM);
             }
 
+            if(productVM.MainPhoto != null)
+            {
+                if (!productVM.MainPhoto.ValidateType("image/"))
+                {
+                    ModelState.AddModelError("MainPhoto", "The entered photo type does not match the required one");
+                    return View(productVM);
+                }
+                if (!productVM.MainPhoto.VaidateSize(500))
+                {
+                    ModelState.AddModelError("MainPhoto", "The size of the photo is larger than required");
+                    return View(productVM);
+                }
+            }
+            if(productVM.HoverPhoto != null)
+            {
+                if (!productVM.HoverPhoto.ValidateType("image/"))
+                {
+                    ModelState.AddModelError("HoverPhoto", "The entered photo type does not match the required one");
+                    return View(productVM);
+                }
+                if (!productVM.HoverPhoto.VaidateSize(500))
+                {
+                    ModelState.AddModelError("HoverPhoto", "The size of the photo is larger than required");
+                    return View(productVM);
+                }
+            }
             //For tag
             if(productVM.TagIds != null)
             {
@@ -270,8 +304,70 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
                 existed.ProductSizes.Add(new ProductSize { SizeId = size });
             }
           
+            if(productVM.MainPhoto != null)
+            {
+                string main = await productVM.MainPhoto.CreateFileAsync(_env.WebRootPath, "assets", "images", "website-images");
+                ProductImage exImage = existed.ProductImages.FirstOrDefault(pi => pi.IsPrimary == true);
+                exImage.ImageUrl.DeleteFile(_env.WebRootPath, "assets", "images", "website-images");
+                existed.ProductImages.Remove(exImage);
+                existed.ProductImages.Add(new ProductImage
+                {
+                    IsPrimary = true,
+                    ImageUrl = main,
+                    Alternative = productVM.Name
+                });
+            }
+            if(productVM.HoverPhoto != null)
+            {
+                string hover = await productVM.HoverPhoto.CreateFileAsync(_env.WebRootPath, "assets", "images", "website-images");
+                ProductImage exImage = existed.ProductImages.FirstOrDefault(pi => pi.IsPrimary == false);
+                exImage.ImageUrl.DeleteFile(_env.WebRootPath, "assets", "images", "website-images");
+                existed.ProductImages.Remove(exImage);
+                existed.ProductImages.Add(new ProductImage
+                {
+                    IsPrimary = false,
+                    ImageUrl = hover,
+                    Alternative = productVM.Name
+                });
+            }
+          
+            if(productVM.ImageIds == null)
+            {
+                productVM.ImageIds = new List<int>();
+            }
+            List<ProductImage> removeable = existed.ProductImages.Where(pi => !productVM.ImageIds.Exists(i => i == pi.Id) && pi.IsPrimary == null).ToList();
+            foreach (ProductImage remIm in removeable)
+            {
+                remIm.ImageUrl.DeleteFile(_env.WebRootPath, "assets", "images", "website-images");
+                existed.ProductImages.Remove(remIm);
+            }
 
-            existed.Name = productVM.Name;
+            TempData["Message"] = "";
+            if (productVM.AdditionalPhotos != null)
+            {
+                foreach (IFormFile photos in productVM.AdditionalPhotos)
+                {
+                    if (!photos.ValidateType("image/"))
+                    {
+                        TempData["Message"] = $"<div class=\"alert alert-danger\" role=\"alert\">\r\n  {photos.FileName} the file type doesn't match the required one!\r\n</div>";
+                        continue;
+                    }
+                    if (!photos.VaidateSize(500))
+                    {
+                        TempData["Message"] = $"<div class=\"alert alert-danger\" role=\"alert\">\r\n  {photos.FileName} the file size doesn't match the required one\r\n</div>";
+                        continue;
+                    }
+
+                    existed.ProductImages.Add(new ProductImage
+                    {
+                        IsPrimary = null,
+                        ImageUrl = await photos.CreateFileAsync(_env.WebRootPath, "assets", "images", "website-images"),
+                        Alternative = productVM.Name
+                    });
+                }
+            }
+
+                existed.Name = productVM.Name;
                 existed.Price = productVM.Price;
                 existed.Description = productVM.Description;
                 existed.FullDescription = productVM.FullDescription;
@@ -280,7 +376,8 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
                 existed.CategoryId = productVM.CategoryId;
 
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+            TempData["Message"] = $"<div class=\"alert alert-success\" role=\"alert\">\r\n  Successfully updated {productVM.Name} product\r\n</div>";
+            return RedirectToAction(nameof(Index));
          }
 
 
