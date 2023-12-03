@@ -1217,7 +1217,7 @@ blockquote p {
 .quantity .cart-plus-minus .cart-plus-minus-box {
   background-color: #505050;
   border: 1px solid #505050;
-  color: #ffffff;
+  color: white;
   text-align: center;
   width: 75px;
   height: 50px;
@@ -1231,21 +1231,23 @@ blockquote p {
   -o-transition: all 0.3s ease 0s;
   transition: all 0.3s ease 0s;
   font-size: 10px;
-  color: inherit;
+  color: white;
   top: 50%;
   -webkit-transform: translateY(-50%);
       -ms-transform: translateY(-50%);
           transform: translateY(-50%);
-  color: #ffffff;
+  color: red;
 }
 
 .quantity .cart-plus-minus .qtybutton.dec {
-  left: 15px;
-}
+        left: 15px;
+        color: white;
+ }
 
 .quantity .cart-plus-minus .qtybutton.inc {
   left: auto;
   right: 15px;
+  color: white;
 }
 
 /* ---Price Box--- */
