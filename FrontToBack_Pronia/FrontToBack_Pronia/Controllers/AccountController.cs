@@ -11,9 +11,11 @@ namespace FrontToBack_Pronia.Controllers
     public class AccountController : Controller
     {
         private readonly UserManager<AppUser> _userManger;
-        public AccountController(UserManager<AppUser> userManager)
+        private readonly SignInManager<AppUser> _signInManager;
+        public AccountController(UserManager<AppUser> userManager,SignInManager<AppUser> signIn)
         {
             _userManger = userManager;
+            _signInManager = signIn;
         }
         public IActionResult Register()
         {
@@ -53,7 +55,7 @@ namespace FrontToBack_Pronia.Controllers
                 
             };
             IdentityResult result = await _userManger.CreateAsync(appUser, userVM.Password);
-            if (!result.Succeeded)
+            if (!result.Succeeded) 
             {
                 foreach (IdentityError item in result.Errors)
                 {
@@ -61,7 +63,15 @@ namespace FrontToBack_Pronia.Controllers
                     return View();
                 }
             }
+
+            await _signInManager.SignInAsync(appUser, false);
             return RedirectToAction("Index", "Home");
+        }
+        public async Task<IActionResult> LogOut()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+
         }
     }
 }
