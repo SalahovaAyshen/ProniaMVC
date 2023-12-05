@@ -85,7 +85,7 @@ namespace FrontToBack_Pronia.Controllers
 
             string json = JsonConvert.SerializeObject(basket);
             Response.Cookies.Append("Basket", json);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Home");
         }
 
         public async Task<IActionResult> GetBasket()
