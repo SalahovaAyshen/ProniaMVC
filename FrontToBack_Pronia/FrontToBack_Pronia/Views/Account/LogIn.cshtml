@@ -1,0 +1,69 @@
+﻿@model LoginVM
+
+<main class="main-content">
+    <div class="breadcrumb-area breadcrumb-height"
+         data-bg-image="~/assets/images/breadcrumb/bg/1-1-1919x388.jpg">
+        <div class="container h-100">
+            <div class="row h-100">
+                <div class="col-lg-12">
+                    <div class="breadcrumb-item">
+                        <h2 class="breadcrumb-heading">LogIn Page</h2>
+                        <ul>
+                            <li>
+                                <a asp-controller="home" asp-action="index">Home</a>
+                            </li>
+                            <li>LogIn</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="login-register-area section-space-y-axis-100">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 pt-5 pt-lg-0">
+                    <form action="#" method="post">
+                        <div class="login-form">
+                            <h4 class="login-title">LogIn</h4>
+                            <div class="row">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                              
+                                <div class="col-md-12">
+                                    <label asp-for="UsernameOrEmail">Username or Email</label>
+                                    <input asp-for="UsernameOrEmail" placeholder="Username or Email" />
+                                    <span asp-validation-for="UsernameOrEmail" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label asp-for="Password">Password</label>
+                                    <input asp-for="Password" placeholder="Password"/>
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-5 d-flex flex-row">
+                                    <input asp-for="IsRemembered" style="width:20px; height:20px"/>
+
+                                    <label asp-for="IsRemembered" class="ps-2">Remember Me</label>
+                                </div>
+                               
+                           
+                                <div class="col-12">
+                                    <button class="btn btn-custom-size lg-size btn-pronia-primary">
+                                        LogIn
+                                    </button>
+                                </div>
+                                <div class="col-md-12 pt-2">
+                                    <span>
+                                        For the first time in Pronia?
+                                        <a asp-controller="account" asp-action="register" class="fw-bolder">Register Now</a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+

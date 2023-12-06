@@ -857,6 +857,10 @@
       "PackagePath": "staticwebassets\\assets\\images\\website-images\\service.png"
     },
     {
+      "Id": "C:\\Users\\hp\\Desktop\\FTB_13.11\\FrontToBack_Pronia\\FrontToBack_Pronia\\wwwroot\\assets\\js\\fetch.js",
+      "PackagePath": "staticwebassets\\assets\\js\\fetch.js"
+    },
+    {
       "Id": "C:\\Users\\hp\\Desktop\\FTB_13.11\\FrontToBack_Pronia\\FrontToBack_Pronia\\wwwroot\\assets\\js\\main.js",
       "PackagePath": "staticwebassets\\assets\\js\\main.js"
     },

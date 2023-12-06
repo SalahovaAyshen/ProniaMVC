@@ -85,6 +85,33 @@ namespace FrontToBack_Pronia.Controllers
 
             string json = JsonConvert.SerializeObject(basket);
             Response.Cookies.Append("Basket", json);
+
+            //List<BasketItemVM> basketItemVMs = new List<BasketItemVM>();
+
+
+            //        foreach (BasketCookieItemVM cookie in basket)
+            //        {
+
+            //            Product newProduct = await _context.Products.Include(p => p.ProductImages.Where(pi => pi.IsPrimary == true)).FirstOrDefaultAsync(p => p.Id == cookie.Id);
+            //            if (newProduct != null)
+            //            {
+            //                BasketItemVM basketItemVM = new BasketItemVM
+            //                {
+            //                    Id = newProduct.Id,
+            //                    Name = newProduct.Name,
+            //                    Price = newProduct.Price,
+            //                    Image = newProduct.ProductImages[0].ImageUrl,
+            //                    Count = cookie.Count,
+            //                    Subtotal = newProduct.Price * cookie.Count,
+            //                };
+            //                basketItemVMs.Add(basketItemVM);
+            //            }
+
+            //        }
+
+
+
+            //return PartialView("ProductPV",basketItemVMs);
             return RedirectToAction("Index", "Home");
         }
 

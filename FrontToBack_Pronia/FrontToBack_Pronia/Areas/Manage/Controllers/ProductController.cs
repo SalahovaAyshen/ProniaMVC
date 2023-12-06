@@ -2,12 +2,14 @@
 using FrontToBack_Pronia.DAL;
 using FrontToBack_Pronia.Models;
 using FrontToBack_Pronia.Utilities.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace FrontToBack_Pronia.Areas.Manage.Controllers
 {
     [Area("Manage")]
+    [Authorize]
     public class ProductController : Controller
     {
         private readonly AppDbContext _context;

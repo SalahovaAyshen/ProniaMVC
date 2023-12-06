@@ -1,6 +1,5 @@
 ﻿using FrontToBack_Pronia.Models;
 using FrontToBack_Pronia.Utilities;
-using FrontToBack_Pronia.Utilities.Enums;
 using FrontToBack_Pronia.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +11,12 @@ namespace FrontToBack_Pronia.Controllers
     {
         private readonly UserManager<AppUser> _userManger;
         private readonly SignInManager<AppUser> _signInManager;
-        public AccountController(UserManager<AppUser> userManager,SignInManager<AppUser> signIn)
+        public readonly RoleManager<IdentityRole> _roleManger;
+        public AccountController(UserManager<AppUser> userManager,SignInManager<AppUser> signIn,RoleManager<IdentityRole> roleManager)
         {
             _userManger = userManager;
             _signInManager = signIn;
+            _roleManger = roleManager;
         }
         public IActionResult Register()
         {
@@ -27,12 +28,12 @@ namespace FrontToBack_Pronia.Controllers
         {
             if (!ModelState.IsValid) return View();
 
-            if (!userVM.Name.Check())
+            if (userVM.Name.Check())
             {
                 ModelState.AddModelError("Name", "The name can't contain number");
                 return View();
             }
-            if (!userVM.Surname.Check())
+            if (userVM.Surname.Check())
             {
                 ModelState.AddModelError("Surname", "The surname can't contain number");
                 return View();
@@ -67,11 +68,69 @@ namespace FrontToBack_Pronia.Controllers
             await _signInManager.SignInAsync(appUser, false);
             return RedirectToAction("Index", "Home");
         }
+
+        public IActionResult LogIn()
+        {
+            return View();
+        }
+
+        [HttpPost]
+
+        public async Task<IActionResult> LogIn(LoginVM loginVM, string returnurl)
+        {
+            if (!ModelState.IsValid) return View();
+            AppUser user = await _userManger.FindByNameAsync(loginVM.UsernameOrEmail);
+            if (user == null)
+            {
+                user = await _userManger.FindByEmailAsync(loginVM.UsernameOrEmail);
+                if(user == null)
+                {
+                    ModelState.AddModelError(String.Empty, "Username, Email or Password is incorect");
+                    return View();  
+                }
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(user, loginVM.Password, loginVM.IsRemembered, true);
+
+            if (result.IsLockedOut)
+            {
+                ModelState.AddModelError(String.Empty, "You are blocked, please try again later");
+                return View();
+            }
+            if(!result.Succeeded)
+            {
+                ModelState.AddModelError(String.Empty, "Username, Email or Password is incorect");
+                return View();
+            }
+            if(returnurl == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return Redirect(returnurl);
+        }
         public async Task<IActionResult> LogOut()
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
 
+        }
+
+        public async Task<IActionResult> CreateRoles()
+        {
+           
+                foreach (UserRole role in Enum.GetValues(typeof(UserRole)))
+                {
+                    if (!await _roleManger.RoleExistsAsync(role.ToString()))
+                    {
+                        await _roleManger.CreateAsync(new IdentityRole
+                        {
+                            Name = role.ToString(),
+                        });
+                    }
+
+                }
+            
+            return RedirectToAction("Index", "Home");
         }
     }
 }

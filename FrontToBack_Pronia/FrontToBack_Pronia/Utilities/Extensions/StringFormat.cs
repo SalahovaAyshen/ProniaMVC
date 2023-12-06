@@ -22,13 +22,13 @@ namespace FrontToBack_Pronia.Utilities
             int count = 0;
             for (int i = 0; i < word.Length; i++)
             {
-                if (!Char.IsDigit(word[i])) count++;
+                if (Char.IsDigit(word[i])) count++;
             }
             if (count != word.Length - 1)
             {
-                return false;
+                return true;
             }
-           return true;
+           return false;
             
         }
     }

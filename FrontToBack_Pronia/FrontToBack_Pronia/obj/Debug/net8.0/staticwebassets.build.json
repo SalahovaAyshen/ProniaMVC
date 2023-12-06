@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "OB01SDnv6HXsJnPVJBeHkW+QKRVOkZ+QSzM42xb6EIo=",
+  "Hash": "vmhkucjAJbl/sOE5qjRTdLyac9A2NIWCFLuhDZImW20=",
   "Source": "FrontToBack_Pronia",
   "BasePath": "_content/FrontToBack_Pronia",
   "Mode": "Default",
@@ -4081,6 +4081,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\assets\\images\\website-images\\service.png"
+    },
+    {
+      "Identity": "C:\\Users\\hp\\Desktop\\FTB_13.11\\FrontToBack_Pronia\\FrontToBack_Pronia\\wwwroot\\assets\\js\\fetch.js",
+      "SourceId": "FrontToBack_Pronia",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\hp\\Desktop\\FTB_13.11\\FrontToBack_Pronia\\FrontToBack_Pronia\\wwwroot\\",
+      "BasePath": "_content/FrontToBack_Pronia",
+      "RelativePath": "assets/js/fetch.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\assets\\js\\fetch.js"
     },
     {
       "Identity": "C:\\Users\\hp\\Desktop\\FTB_13.11\\FrontToBack_Pronia\\FrontToBack_Pronia\\wwwroot\\assets\\js\\main.js",
