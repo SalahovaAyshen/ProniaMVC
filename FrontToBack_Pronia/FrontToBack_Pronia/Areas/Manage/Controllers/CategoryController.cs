@@ -1,6 +1,8 @@
 ﻿using FrontToBack_Pronia.Areas.Manage.ViewModels;
 using FrontToBack_Pronia.DAL;
 using FrontToBack_Pronia.Models;
+using FrontToBack_Pronia.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Drawing;
@@ -8,6 +10,7 @@ using System.Drawing;
 namespace FrontToBack_Pronia.Areas.Manage.Controllers
 {
     [Area("Manage")]
+    [AutoValidateAntiforgeryToken]
     public class CategoryController : Controller
     {
         private readonly AppDbContext _context;
@@ -15,13 +18,14 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
         {
             _context = context;
         }
+        [Authorize(Roles = nameof(UserRole.Admin) + "," + nameof(UserRole.Moderator))]
         public async Task<IActionResult> Index()
         {
             List<Category> categories = await _context.Categories.Include(c => c.Products).ToListAsync();
 
             return View(categories);
         }
-
+        [Authorize(Roles = nameof(UserRole.Admin) + "," + nameof(UserRole.Moderator))]
         //Create
         public IActionResult Create()
         {
@@ -50,7 +54,7 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
            await _context.SaveChangesAsync();
             return Redirect(nameof(Index)); 
         }
-
+        [Authorize(Roles = nameof(UserRole.Admin) + "," + nameof(UserRole.Moderator))]
         //Update
         public async Task<IActionResult> Update(int id)
         {
@@ -79,6 +83,7 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        [Authorize(Roles = nameof(UserRole.Admin))]
         //Delete
         public async Task<IActionResult> Delete(int id)
         {
@@ -89,7 +94,7 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
+        [Authorize(Roles = nameof(UserRole.Admin) + "," + nameof(UserRole.Moderator))]
         //Detail
         public async Task<IActionResult> Detail(int id)
         {

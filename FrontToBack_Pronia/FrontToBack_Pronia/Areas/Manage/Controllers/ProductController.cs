@@ -1,15 +1,17 @@
 ﻿using FrontToBack_Pronia.Areas.Manage.ViewModels;
 using FrontToBack_Pronia.DAL;
 using FrontToBack_Pronia.Models;
+using FrontToBack_Pronia.Utilities;
 using FrontToBack_Pronia.Utilities.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace FrontToBack_Pronia.Areas.Manage.Controllers
 {
     [Area("Manage")]
-    [Authorize]
+    [AutoValidateAntiforgeryToken]
     public class ProductController : Controller
     {
         private readonly AppDbContext _context;
@@ -20,6 +22,8 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
             _env = env;
         }
 
+        [Authorize(Roles = nameof(UserRole.Admin) + "," + nameof(UserRole.Moderator))]
+
         public async Task<IActionResult> Index()
         {
             List<Product> products = await _context.Products
@@ -28,7 +32,7 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
                 .ToListAsync();
             return View(products);
         }
-
+        [Authorize(Roles = nameof(UserRole.Admin) + "," + nameof(UserRole.Moderator))]
         public async Task<IActionResult> Create()
         {
             CreateProductVM productVM = new CreateProductVM();
@@ -190,6 +194,7 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
 
         }
 
+        [Authorize(Roles = nameof(UserRole.Admin) + "," + nameof(UserRole.Moderator))]
         //Update
         public async Task<IActionResult> Update(int id)
         {
@@ -384,8 +389,9 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
 
 
 
+        [Authorize(Roles = nameof(UserRole.Admin))]
         //Delete
-            public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             if (id <= 0) return BadRequest();
             Product product = await _context.Products.Include(p=>p.ProductImages).FirstOrDefaultAsync(x => x.Id == id);
@@ -403,8 +409,9 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = nameof(UserRole.Admin) + "," + nameof(UserRole.Moderator))]
         //Detail
-            public async Task<IActionResult> Detail(int id)
+        public async Task<IActionResult> Detail(int id)
         {
             Product product = await _context.Products
                 .Include(p => p.ProductImages)

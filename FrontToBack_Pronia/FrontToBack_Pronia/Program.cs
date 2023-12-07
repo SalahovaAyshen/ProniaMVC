@@ -28,10 +28,11 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 builder.Services.AddSingleton<IHttpContextAccessor,HttpContextAccessor>();
 builder.Services.AddScoped<LayoutService>();
 var app = builder.Build();
-app.UseAuthentication();
-app.UseAuthorization();
+
 app.UseStaticFiles();
 app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(

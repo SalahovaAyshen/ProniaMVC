@@ -24,7 +24,7 @@ namespace FrontToBack_Pronia.Utilities
             {
                 if (Char.IsDigit(word[i])) count++;
             }
-            if (count != word.Length - 1)
+            if (count == word.Length - 1)
             {
                 return true;
             }

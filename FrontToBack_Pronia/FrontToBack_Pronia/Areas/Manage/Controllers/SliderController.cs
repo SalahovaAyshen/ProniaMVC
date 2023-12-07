@@ -1,7 +1,9 @@
 ﻿using FrontToBack_Pronia.Areas.Manage.ViewModels;
 using FrontToBack_Pronia.DAL;
 using FrontToBack_Pronia.Models;
+using FrontToBack_Pronia.Utilities;
 using FrontToBack_Pronia.Utilities.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
@@ -9,6 +11,8 @@ using System.IO;
 namespace FrontToBack_Pronia.Areas.Manage.Controllers
 {
     [Area("Manage")]
+    [AutoValidateAntiforgeryToken]
+
     public class SliderController : Controller
     {
         private readonly AppDbContext _context;
@@ -18,12 +22,13 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
             _context = context;
             _env = env;
         }
+        [Authorize(Roles = nameof(UserRole.Admin) + "," + nameof(UserRole.Moderator))]
         public async Task<IActionResult> Index()
         {
             List<Slider> slider = await _context.Sliders.ToListAsync();
             return View(slider);
         }
-
+        [Authorize(Roles = nameof(UserRole.Admin) + "," + nameof(UserRole.Moderator))]
         //Create
         public IActionResult Create()
         {
@@ -63,7 +68,7 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
+        [Authorize(Roles = nameof(UserRole.Admin))]
         //Delete
         public async Task<IActionResult> Delete(int id)
         {
@@ -78,6 +83,7 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = nameof(UserRole.Admin) + "," + nameof(UserRole.Moderator))]
         //Update
         public async Task<IActionResult> Update(int id)
         {
@@ -133,7 +139,7 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
+        [Authorize(Roles = nameof(UserRole.Admin) + "," + nameof(UserRole.Moderator))]
         public async Task<IActionResult> Detail(int id)
         {
             Slider slider = await _context.Sliders.FirstOrDefaultAsync(x => x.Id == id);

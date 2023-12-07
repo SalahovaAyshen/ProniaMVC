@@ -65,6 +65,7 @@ namespace FrontToBack_Pronia.Controllers
                 }
             }
 
+            await _userManger.AddToRoleAsync(appUser, UserRole.Member.ToString());
             await _signInManager.SignInAsync(appUser, false);
             return RedirectToAction("Index", "Home");
         }
@@ -85,7 +86,7 @@ namespace FrontToBack_Pronia.Controllers
                 user = await _userManger.FindByEmailAsync(loginVM.UsernameOrEmail);
                 if(user == null)
                 {
-                    ModelState.AddModelError(String.Empty, "Username, Email or Password is incorect");
+                    ModelState.AddModelError(String.Empty, "Username, Email or Password is incorrect");
                     return View();  
                 }
             }
@@ -99,7 +100,7 @@ namespace FrontToBack_Pronia.Controllers
             }
             if(!result.Succeeded)
             {
-                ModelState.AddModelError(String.Empty, "Username, Email or Password is incorect");
+                ModelState.AddModelError(String.Empty, "Username, Email or Password is incorrect");
                 return View();
             }
             if(returnurl == null)
