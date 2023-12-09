@@ -82,9 +82,11 @@ namespace FrontToBack_Pronia.Controllers
             if (id <= 0) return BadRequest();
             Product product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
             if(product == null) return NotFound();
+          
 
             if (User.Identity.IsAuthenticated)
             {
+                
                 AppUser user = await _userManager.Users
                     .Include(u=>u.BasketItems)
                     .FirstOrDefaultAsync(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -106,6 +108,7 @@ namespace FrontToBack_Pronia.Controllers
                     basketItem.Count++;
                 }
                 await _context.SaveChangesAsync();
+              
             }
             else
             {

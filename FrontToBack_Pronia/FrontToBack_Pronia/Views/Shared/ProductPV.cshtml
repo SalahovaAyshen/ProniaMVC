@@ -1,7 +1,7 @@
 ﻿
 @model List<Product>
 
-<div class="container ">
+<div class="container">
     <div class="row">
         <div class="section-title-wrap without-tab">
             <h2 class="section-title">New Products</h2>
@@ -10,7 +10,7 @@
                 text. It has roots in a piece of classical Latin literature
             </p>
         </div>
-        <div class="col-lg-12 basket-box">
+        <div class="col-lg-12">
             <div class="swiper-container product-slider">
                 <div class="swiper-wrapper">
                     @foreach (Product newproduct in Model)
@@ -28,7 +28,7 @@
                                 <div class="product-add-action">
                                     <ul>
                                         <li>
-                                            <a href="wishlist.html"
+                                            <a asp-controller="wishlist" asp-action="addtowishlist" asp-route-id="@newproduct.Id"
                                                data-tippy="Add to wishlist"
                                                data-tippy-inertia="true"
                                                data-tippy-animation="shift-away"
@@ -52,7 +52,7 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a asp-controller="basket" asp-action="addbasket" asp-route-id="@newproduct.Id" 
+                                            <a asp-controller="basket" asp-action="addbasket" asp-route-id="@newproduct.Id" class="add-to-basket"
                                                data-tippy="Add to cart"
                                                data-tippy-inertia="true"
                                                data-tippy-animation="shift-away"

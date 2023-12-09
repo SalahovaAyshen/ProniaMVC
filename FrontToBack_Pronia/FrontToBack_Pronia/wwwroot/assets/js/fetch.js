@@ -1,15 +1,15 @@
-﻿const link = document.querySelectorAll(".add-to-basket");
-const div = document.querySelectorAll(".basket-box");
-link.forEach(btn => {
-    btn.addEventListener("click", function (e) {
-        e.preventDefault();
-        var endPoint = btn.getAttribute("href");
+﻿//const link = document.querySelectorAll(".add-to-basket");
+//const div = document.querySelector(".basket-box");
+//link.forEach(btn => {
+//    btn.addEventListener("click", function (e) {
+//        e.preventDefault();
+//        var endpoint = btn.getAttribute("href");
 
-        Console.log(endPoint);
-        //fetch(endPoint)
-        //    .then(response => response.Text())
-        //    .then(data => {
-        //        div.innerHTML = data;
-        //})
-    })
-})
+//        Console.log(endpoint);
+//        //fetch(endPoint)
+//        //    .then(response => response.Text())
+//        //    .then(data => {
+//        //        div.innerHTML = data;
+//        //})
+//    })
+//})
