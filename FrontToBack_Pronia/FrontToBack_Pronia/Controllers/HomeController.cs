@@ -1,5 +1,6 @@
 ﻿using FrontToBack_Pronia.DAL;
 using FrontToBack_Pronia.Models;
+using FrontToBack_Pronia.Services;
 using FrontToBack_Pronia.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,10 +10,11 @@ namespace FrontToBack_Pronia.Controllers
     public class HomeController : Controller
     {
         private readonly AppDbContext _context;
+
+
         public HomeController(AppDbContext context)
         {
             _context = context;
-            
         }
 
 

@@ -1,4 +1,5 @@
 using FrontToBack_Pronia.DAL;
+using FrontToBack_Pronia.Interfaces;
 using FrontToBack_Pronia.Models;
 using FrontToBack_Pronia.Services;
 using Microsoft.AspNetCore.Identity;
@@ -26,6 +27,8 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 
 
 builder.Services.AddSingleton<IHttpContextAccessor,HttpContextAccessor>();
+builder.Services.AddSingleton<IEmailService, EmailService>();
+
 builder.Services.AddScoped<LayoutService>();
 var app = builder.Build();
 

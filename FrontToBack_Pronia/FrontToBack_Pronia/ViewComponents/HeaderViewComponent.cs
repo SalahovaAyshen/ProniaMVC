@@ -10,7 +10,7 @@ using static System.Net.WebRequestMethods;
 
 namespace FrontToBack_Pronia.ViewComponents
 {
-    public class HeaderViewComponent:ViewComponent
+    public class HeaderViewComponent : ViewComponent
     {
         public AppDbContext _context { get; set; }
         private readonly IHttpContextAccessor _http;
@@ -25,38 +25,38 @@ namespace FrontToBack_Pronia.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            Dictionary<string, string> settings = await _context.Settings.ToDictionaryAsync(s=>s.Key,s=>s.Value);
+            Dictionary<string, string> settings = await _context.Settings.ToDictionaryAsync(s => s.Key, s => s.Value);
             List<BasketItemVM> basketItemVMs = new List<BasketItemVM>();
-
-            if (_http.HttpContext.Request.Cookies["Basket"] != null)
+            if (User.Identity.IsAuthenticated)
             {
-                List<BasketCookieItemVM> cookies = JsonConvert.DeserializeObject<List<BasketCookieItemVM>>(_http.HttpContext.Request.Cookies["Basket"]);
-                if (User.Identity.IsAuthenticated)
+                AppUser user = await _userManager.Users
+               .Include(u => u.BasketItems.Where(bi => bi.OrderId == null))
+               .ThenInclude(bi => bi.Product)
+               .ThenInclude(p => p.ProductImages.Where(pi => pi.IsPrimary == true))
+               .FirstOrDefaultAsync(u => u.Id == _http.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+                foreach (BasketItem item in user.BasketItems)
                 {
-                    AppUser user = await _userManager.Users
-                   .Include(u => u.BasketItems)
-                   .ThenInclude(bi => bi.Product)
-                   .ThenInclude(p => p.ProductImages.Where(pi => pi.IsPrimary == true))
-                   .FirstOrDefaultAsync(u => u.Id == _http.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
-                    foreach (BasketItem item in user.BasketItems)
+                    basketItemVMs.Add(new BasketItemVM
                     {
-                        basketItemVMs.Add(new BasketItemVM
-                        {
-                            Id = item.Id,
-                            Price = item.Product.Price,
-                            Count = item.Count,
-                            Name = item.Product.Name,
-                            Subtotal = item.Count * item.Product.Price,
-                            Image = item.Product.ProductImages[0].ImageUrl
+                        Id = item.Id,
+                        Price = item.Product.Price,
+                        Count = item.Count,
+                        Name = item.Product.Name,
+                        Subtotal = item.Count * item.Product.Price,
+                        Image = item.Product.ProductImages[0].ImageUrl
 
-                        });
-                    }
+                    });
                 }
-                else
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+
+                if (_http.HttpContext.Request.Cookies["Basket"] != null)
                 {
-                    if (cookies != null)
-                    {
-                        foreach (BasketCookieItemVM cookie in cookies)
+                List<BasketCookieItemVM> cookies = JsonConvert.DeserializeObject<List<BasketCookieItemVM>>(_http.HttpContext.Request.Cookies["Basket"]);
+
+                    foreach (BasketCookieItemVM cookie in cookies)
                         {
 
                             Product product = await _context.Products
@@ -77,18 +77,20 @@ namespace FrontToBack_Pronia.ViewComponents
                             }
 
                         }
-                    }
+                    
+
+
 
                 }
-               
             }
-            HeaderAndBasketVM headerAndBasketVM = new HeaderAndBasketVM 
-            {
-                Header = settings,
-                Basket = basketItemVMs
                
-            };
-            return View(headerAndBasketVM);
+                HeaderAndBasketVM headerAndBasketVM = new HeaderAndBasketVM
+                {
+                    Header = settings,
+                    Basket = basketItemVMs
+
+                };
+                return View(headerAndBasketVM);
+            }
         }
     }
-}

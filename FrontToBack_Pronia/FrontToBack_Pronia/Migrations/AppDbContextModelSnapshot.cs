@@ -172,7 +172,26 @@ namespace FrontToBack_Pronia.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AppUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("PurchasedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool?>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("Orders");
                 });
@@ -566,12 +585,12 @@ namespace FrontToBack_Pronia.Migrations
             modelBuilder.Entity("FrontToBack_Pronia.Models.BasketItem", b =>
                 {
                     b.HasOne("FrontToBack_Pronia.Models.AppUser", "AppUser")
-                        .WithMany()
+                        .WithMany("BasketItems")
                         .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FrontToBack_Pronia.Models.Order", "Order")
+                    b.HasOne("FrontToBack_Pronia.Models.Order", null)
                         .WithMany("BasketItems")
                         .HasForeignKey("OrderId");
 
@@ -583,9 +602,18 @@ namespace FrontToBack_Pronia.Migrations
 
                     b.Navigation("AppUser");
 
-                    b.Navigation("Order");
-
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("FrontToBack_Pronia.Models.Order", b =>
+                {
+                    b.HasOne("FrontToBack_Pronia.Models.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
                 });
 
             modelBuilder.Entity("FrontToBack_Pronia.Models.Product", b =>
@@ -714,6 +742,11 @@ namespace FrontToBack_Pronia.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("FrontToBack_Pronia.Models.AppUser", b =>
+                {
+                    b.Navigation("BasketItems");
                 });
 
             modelBuilder.Entity("FrontToBack_Pronia.Models.Category", b =>
