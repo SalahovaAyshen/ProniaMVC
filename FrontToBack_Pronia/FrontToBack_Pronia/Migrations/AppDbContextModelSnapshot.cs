@@ -110,9 +110,6 @@ namespace FrontToBack_Pronia.Migrations
                     b.Property<int>("Count")
                         .HasColumnType("int");
 
-                    b.Property<int?>("OrderId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
@@ -122,8 +119,6 @@ namespace FrontToBack_Pronia.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
-
-                    b.HasIndex("OrderId");
 
                     b.HasIndex("ProductId");
 
@@ -177,16 +172,27 @@ namespace FrontToBack_Pronia.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AppUserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("PurchasedAt")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool?>("Status")
-                        .HasColumnType("bit");
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("TotalPrice")
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("TotalAmount")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
@@ -194,6 +200,46 @@ namespace FrontToBack_Pronia.Migrations
                     b.HasIndex("AppUserId");
 
                     b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("FrontToBack_Pronia.Models.OrderItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("FrontToBack_Pronia.Models.Product", b =>
@@ -590,10 +636,6 @@ namespace FrontToBack_Pronia.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FrontToBack_Pronia.Models.Order", null)
-                        .WithMany("BasketItems")
-                        .HasForeignKey("OrderId");
-
                     b.HasOne("FrontToBack_Pronia.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
@@ -609,11 +651,28 @@ namespace FrontToBack_Pronia.Migrations
                 {
                     b.HasOne("FrontToBack_Pronia.Models.AppUser", "AppUser")
                         .WithMany()
-                        .HasForeignKey("AppUserId")
+                        .HasForeignKey("AppUserId");
+
+                    b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("FrontToBack_Pronia.Models.OrderItem", b =>
+                {
+                    b.HasOne("FrontToBack_Pronia.Models.Order", "Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("AppUser");
+                    b.HasOne("FrontToBack_Pronia.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("FrontToBack_Pronia.Models.Product", b =>
@@ -761,7 +820,7 @@ namespace FrontToBack_Pronia.Migrations
 
             modelBuilder.Entity("FrontToBack_Pronia.Models.Order", b =>
                 {
-                    b.Navigation("BasketItems");
+                    b.Navigation("OrderItems");
                 });
 
             modelBuilder.Entity("FrontToBack_Pronia.Models.Product", b =>
