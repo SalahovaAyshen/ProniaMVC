@@ -1,4 +1,5 @@
-﻿using FrontToBack_Pronia.Models;
+﻿using FrontToBack_Pronia.Interfaces;
+using FrontToBack_Pronia.Models;
 using FrontToBack_Pronia.Utilities;
 using FrontToBack_Pronia.ViewModels;
 using Microsoft.AspNetCore.Identity;
@@ -12,11 +13,13 @@ namespace FrontToBack_Pronia.Controllers
         private readonly UserManager<AppUser> _userManger;
         private readonly SignInManager<AppUser> _signInManager;
         public readonly RoleManager<IdentityRole> _roleManger;
-        public AccountController(UserManager<AppUser> userManager,SignInManager<AppUser> signIn,RoleManager<IdentityRole> roleManager)
+        private readonly IEmailService _emailService;
+        public AccountController(UserManager<AppUser> userManager,SignInManager<AppUser> signIn,RoleManager<IdentityRole> roleManager, IEmailService emailService)
         {
             _userManger = userManager;
             _signInManager = signIn;
             _roleManger = roleManager;
+            _emailService = emailService;
         }
         public IActionResult Register()
         {
@@ -66,10 +69,31 @@ namespace FrontToBack_Pronia.Controllers
             }
 
             await _userManger.AddToRoleAsync(appUser, UserRole.Member.ToString());
-            await _signInManager.SignInAsync(appUser, false);
-            return RedirectToAction("Index", "Home");
+            var token = await _userManger.GenerateEmailConfirmationTokenAsync(appUser);
+            var confirmationLink = Url.Action(nameof(ConfirmEmail), "Account", new { token,Email = appUser.Email}, Request.Scheme);
+            _emailService.SendEmailAsync(appUser.Email,"Email Confirmation", confirmationLink);
+            //await _signInManager.SignInAsync(appUser, false);
+            return RedirectToAction(nameof(SuccessfullyRegistered), "Account");
         }
+        public async Task<IActionResult> ConfirmEmail(string token, string email)
+        {
+            AppUser user = await _userManger.FindByEmailAsync(email);
+            if(user==null) return NotFound();
+            var result = await _userManger.ConfirmEmailAsync(user, token);
 
+            if (!result.Succeeded)
+            {
+                return BadRequest();
+            }
+
+            await _signInManager.SignInAsync(user,false);
+
+            return View();
+        }
+        public IActionResult SuccessfullyRegistered()
+        {
+            return View();
+        }
         public IActionResult LogIn()
         {
             return View();
@@ -96,6 +120,11 @@ namespace FrontToBack_Pronia.Controllers
             if (result.IsLockedOut)
             {
                 ModelState.AddModelError(String.Empty, "You are blocked, please try again later");
+                return View();
+            }
+            if (!user.EmailConfirmed)
+            {
+                ModelState.AddModelError(String.Empty, "Please confirm your email");
                 return View();
             }
             if(!result.Succeeded)
