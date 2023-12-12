@@ -1,5 +1,6 @@
 ﻿using FrontToBack_Pronia.DAL;
 using FrontToBack_Pronia.Models;
+using FrontToBack_Pronia.Utilities.Exceptions;
 using FrontToBack_Pronia.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -54,9 +55,9 @@ namespace FrontToBack_Pronia.Controllers
 
         public async Task<IActionResult> AddToWishList(int id)
         {
-            if (id <= 0) return BadRequest();
+            if (id <= 0) throw new WrongReguestException("The ID cannot be zero or a negative number");
             Product product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
-            if (product == null) return NotFound();
+            if (product == null) throw new NotFoundException("The product wasn't found");
             List<WishListCookieItemVM> wishList = new List<WishListCookieItemVM>();
           
             if (Request.Cookies["WishList"] != null)
@@ -79,8 +80,10 @@ namespace FrontToBack_Pronia.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
+            if (id <= 0) throw new WrongReguestException("The ID cannot be zero or a negative number");
             List<WishListItemVM> wishList = JsonConvert.DeserializeObject<List<WishListItemVM>>(Request.Cookies["WishList"]);
             WishListItemVM existed = wishList.FirstOrDefault(b => b.Id == id);
+            if(existed==null) throw new NotFoundException("The product wasn't found");
             wishList.Remove(existed);
             string json = JsonConvert.SerializeObject(wishList);
             Response.Cookies.Append("WishList", json);

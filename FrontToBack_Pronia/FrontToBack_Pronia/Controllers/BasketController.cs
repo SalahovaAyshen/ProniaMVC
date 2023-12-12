@@ -2,6 +2,7 @@
 using FrontToBack_Pronia.Interfaces;
 using FrontToBack_Pronia.Models;
 using FrontToBack_Pronia.Utilities;
+using FrontToBack_Pronia.Utilities.Exceptions;
 using FrontToBack_Pronia.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -86,9 +87,9 @@ namespace FrontToBack_Pronia.Controllers
 
         public async Task<IActionResult> AddBasket(int id)
         {
-            if (id <= 0) return BadRequest();
+            if (id <= 0) throw new WrongReguestException("The ID cannot be zero or a negative number");
             Product product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
-            if (product == null) return NotFound();
+            if (product == null) throw new NotFoundException("The product wasn't found");
 
 
             if (User.Identity.IsAuthenticated)
@@ -188,9 +189,9 @@ namespace FrontToBack_Pronia.Controllers
 
         public async Task<IActionResult> Minus(int id)
         {
-            if (id <= 0) return BadRequest();
+            if (id <= 0) throw new WrongReguestException("The ID cannot be zero or a negative number");
             Product product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
-            if (product == null) return NotFound();
+            if (product == null) throw new NotFoundException("The product wasn't found");
             if (User.Identity.IsAuthenticated)
             {
                 BasketItem basketItem = await _context.BasketItems.FirstOrDefaultAsync(b => b.Id == id );
@@ -228,9 +229,9 @@ namespace FrontToBack_Pronia.Controllers
 
         public async Task<IActionResult> Plus(int id)
         {
-            if (id <= 0) return BadRequest();
+            if (id <= 0) throw new WrongReguestException("The ID cannot be zero or a negative number");
             Product book = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
-            if (book == null) return NotFound();
+            if (book == null) throw new NotFoundException("The product wasn't found");
 
             if (User.Identity.IsAuthenticated)
             {
@@ -256,9 +257,9 @@ namespace FrontToBack_Pronia.Controllers
         }
         public async Task<IActionResult> Delete(int id)
         {
-            if (id <= 0) return BadRequest();
+            if (id <= 0) throw new WrongReguestException("The ID cannot be zero or a negative number");
             Product product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
-            if (product == null) return NotFound();
+            if (product == null) throw new NotFoundException("The product wasn't found");
 
             if (User.Identity.IsAuthenticated)
             {

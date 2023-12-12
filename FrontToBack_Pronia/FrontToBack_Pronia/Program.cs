@@ -1,5 +1,6 @@
 using FrontToBack_Pronia.DAL;
 using FrontToBack_Pronia.Interfaces;
+using FrontToBack_Pronia.Middlewares;
 using FrontToBack_Pronia.Models;
 using FrontToBack_Pronia.Services;
 using Microsoft.AspNetCore.Identity;
@@ -40,13 +41,16 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<GlobalExceptionMiddleWare>();
+
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
         name: "area",
         pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}"
         );
-}); 
+});
+
 app.MapControllerRoute(
     "default",
     "{controller=home}/{action=index}/{id?}"

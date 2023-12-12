@@ -1,5 +1,6 @@
 ﻿using FrontToBack_Pronia.DAL;
 using FrontToBack_Pronia.Models;
+using FrontToBack_Pronia.Utilities.Exceptions;
 using FrontToBack_Pronia.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +18,7 @@ namespace FrontToBack_Pronia.Controllers
 
         public async Task<IActionResult> Detail(int id)
         {
-            if (id <= 0) return BadRequest();
+            if (id <= 0) throw new WrongReguestException("The ID cannot be zero or a negative number");
             Product product =await _context.Products
                 .Include(p => p.ProductImages)
                 .Include(p=>p.Category)
@@ -28,7 +29,7 @@ namespace FrontToBack_Pronia.Controllers
                 .Include(p=>p.ProductSizes)
                 .ThenInclude(p=>p.Size)
                 .FirstOrDefaultAsync(x => x.Id == id);
-            if(product == null) return NotFound();
+            if(product == null) throw new NotFoundException("The product wasn't found");
 
             
             List<Product> products = await _context.Products
