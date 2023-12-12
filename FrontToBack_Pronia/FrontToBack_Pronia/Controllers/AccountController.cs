@@ -56,10 +56,10 @@ namespace FrontToBack_Pronia.Controllers
                 Surname = userVM.Surname.Trim().Capitalize(),
                 Email = email.Trim(),
                 UserName = userVM.Username.Trim(),
-                
+
             };
             IdentityResult result = await _userManger.CreateAsync(appUser, userVM.Password);
-            if (!result.Succeeded) 
+            if (!result.Succeeded)
             {
                 foreach (IdentityError item in result.Errors)
                 {

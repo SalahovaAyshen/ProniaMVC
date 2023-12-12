@@ -18,10 +18,18 @@ namespace FrontToBack_Pronia.Areas.Manage.Controllers
             _context = context;
         }
         [Authorize(Roles = nameof(UserRole.Admin) + "," + nameof(UserRole.Moderator))]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page=1)
         {
-            List<Size> sizes =await _context.Sizes.Include(s=>s.ProductSizes).ToListAsync();
-            return View(sizes);
+            int count = await _context.Sizes.CountAsync();
+            List<Size> sizes =await _context.Sizes.Skip((page-1)*3).Take(3).Include(s=>s.ProductSizes).ToListAsync();
+
+            PaginationVM<Size> pagination = new PaginationVM<Size>
+            {
+                Items = sizes,
+                TotalPage = Math.Ceiling((double)count / 3),
+                CurrentPage = page
+            };
+            return View(pagination);
         }
         [Authorize(Roles = nameof(UserRole.Admin) + "," + nameof(UserRole.Moderator))]
         //Create
