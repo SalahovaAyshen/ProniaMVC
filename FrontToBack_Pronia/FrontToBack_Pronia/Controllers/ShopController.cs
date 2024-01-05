@@ -13,7 +13,7 @@ namespace FrontToBack_Pronia.Controllers
         {
             _context = context;
         }
-        public async Task<IActionResult> Index(string? search, int? order)
+        public async Task<IActionResult> Index(string? search, int? order, int? categoryId)
         {
             IQueryable<Product> query = _context.Products.Include(p => p.ProductImages.Where(pi => pi.IsPrimary != null)).AsQueryable();
 
@@ -34,9 +34,11 @@ namespace FrontToBack_Pronia.Controllers
 
             }
             if (!string.IsNullOrEmpty(search))
-            {
                 query = query.Where(q => q.Name.ToLower().Contains(search.ToLower()));
-            }
+
+            if(categoryId!=null) 
+                query=query.Where(q=>q.CategoryId==categoryId);
+
             ShopVM shopVM = new ShopVM
             {
                 Products = await query.ToListAsync(),
