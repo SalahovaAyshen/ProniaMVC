@@ -25,7 +25,9 @@
                 <div class="col-xl-3 col-lg-4 order-2 order-lg-1 pt-5 pt-lg-0">
                     <div class="sidebar-area">
                         <div class="widgets-searchbox">
-                            <form asp-controller="shop" asp-action="index">
+                            <form asp-controller="shop" asp-action="index"
+                            asp-route-categoryId="@Model.CategoryId"
+                            asp-route-order="@Model.Order">
                                 <input name="search" class="input-field"
                                        type="text"
                                        placeholder="Search" />
@@ -47,7 +49,10 @@
                                    @foreach (var item in Model.Categories)
                                     {
                                         <li>
-                                            <a asp-controller="shop" asp-action="index" asp-route-categoryID="@item.Id">
+                                            <a asp-controller="shop" asp-action="index" 
+                                            asp-route-categoryID="@item.Id"
+                                            asp-route-order="@Model.Order"
+                                            asp-route-search="@Model.Search">
                                                 <i class="fa fa-chevron-right"></i>
                                                 @item.Name <span>(@item.Products.Count)</span>
                                             </a>
@@ -177,7 +182,7 @@
                                 </ul>
                             </li>
                             <li class="short">
-                              <form asp-controller="shop" asp-action="index" >
+                              <form asp-controller="shop" asp-action="index" asp-route-categoryId="@Model.CategoryId" asp-route-search="@Model.Search">
                                     <select onchange="this.form.submit()" name="order" class="nice-select">
                                         <option value="">Sort by Default</option>
                                         <option value="1">Sort by Name</option>

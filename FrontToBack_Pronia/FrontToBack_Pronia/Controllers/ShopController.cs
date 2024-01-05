@@ -43,6 +43,9 @@ namespace FrontToBack_Pronia.Controllers
             {
                 Products = await query.ToListAsync(),
                 Categories = await _context.Categories.Include(c => c.Products).ToListAsync(),
+                Order=order,
+                Search=search,
+                CategoryId=categoryId
             };
             return View(shopVM);
         }
